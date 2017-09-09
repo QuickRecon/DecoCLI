@@ -55,21 +55,44 @@ void Deco::AddDecent(double depth, double time) {
     for(int i = 0; i < 16; i++){
         /// Calculate Nitrogen
         double Pn;
+        double CurrentPn = this->Pn[i];
         double ppN2 = this->ppN2;
         double DecentRateN2 = DeltaDepth/time;
         double RN2 = DecentRateN2 * this->ppN2;
         double kN2 = log(2)/Deco::buehlmann_N2_halflife[i];
-        Pn = ppN2 + RN2*(time-(1/kN2))-(ppN2 - this->Pn[i] - (RN2/kN2)) * exp(-kN2*time);
+        Pn = ppN2 + RN2*(time-(1/kN2))-(ppN2 - CurrentPn - (RN2/kN2)) * exp(-kN2*time);
 
         /// Calculate Helium
         double Ph;
+        double CurrentPh = this->Ph[i];
         double ppHe = this->ppHe;
         double DecentRateHe = DeltaDepth/time;
         double RHe = DecentRateHe * this->ppHe;
-        double kHe = log(2)/Deco::buehlmann_N2_halflife[i];
-        Ph = ppN2 + RHe*(time-(1/kHe))-(ppHe - this->Ph[i] - (RHe/kHe)) * exp(-kHe*time);
+        double kHe = log(2)/Deco::buehlmann_He_halflife[i];
+        Ph = ppN2 + RHe*(time-(1/kHe))-(ppHe - CurrentPh - (RHe/kHe)) * exp(-kHe*time);
 
-        /// Add to current gas loadings
+        /// Set Loading
+        SetGasLoadings(Pn, Ph, i);
+    }
+}
+
+void Deco::AddBottom(double time) {
+    for(int i = 0; i < 16; i++){
+        /// Calculate Nitrogen
+        double Pn;
+        double CurrentPn = this->Pn[i];
+        double ppN2 = this->ppN2;
+        double halftimeN2 = Deco::buehlmann_N2_halflife[i];
+        Pn = CurrentPn + (ppN2-CurrentPn)*(1-pow(2,-time/halftimeN2));
+
+        // Calculate Helium
+        double Ph;
+        double CurrentPh = this->Ph[i];
+        double ppHe = this->ppHe;
+        double halftimeHe = Deco::buehlmann_He_halflife[i];
+        Ph = CurrentPh + (ppHe-CurrentPh)*(1-pow(2,-time/halftimeHe));
+
+        /// Set Loading
         SetGasLoadings(Pn, Ph, i);
     }
 }

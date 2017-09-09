@@ -17,6 +17,7 @@ class Deco {
         void SetPartialPressures(double depth);
 
         void AddDecent(double depth, double time);
+        void AddBottom(double time);
 
         /// Gas storage
         struct gas {
@@ -30,6 +31,8 @@ class Deco {
     private:
         /// Dive Parameters
         double depth;
+        double TissueAccentCeiling[16];
+        double AccentCeiling;
 
         /// gas parameters
         double ppN2;        // partial pressure Nitrogen
