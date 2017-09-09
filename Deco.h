@@ -6,15 +6,18 @@
 #define DECOCLI_DECO_H
 
 #include <vector>
+#include "math.h"
 
 class Deco {
     public:
         /// Functions
-        Deco(double ppWv, double pA);
+        Deco(double ppWv);
 
         void SetGasLoadings(double Pn, double Ph, int compartmentIndex);
+        void SetPartialPressures(double depth);
 
         void AddDecent(double depth, double time);
+
         /// Gas storage
         struct gas {
             double FrN2;    // Fractional percent Nitrogen
@@ -25,6 +28,9 @@ class Deco {
         std::vector<gas> gases;
 
     private:
+        /// Dive Parameters
+        double depth;
+
         /// gas parameters
         double ppN2;        // partial pressure Nitrogen
         double ppHe;        // parital pressure Helium
@@ -42,11 +48,11 @@ class Deco {
         /// Compartment Tables (Taken from Subsurface Deco.c)
         static const double buehlmann_N2_a[];
         static const double buehlmann_N2_b[];
-        static const double buehlmann_N2_t_halflife[];
+        static const double buehlmann_N2_halflife[];
 
         static const double buehlmann_He_a[];
         static const double buehlmann_He_b[];
-        static const double buehlmann_He_t_halflife[];
+        static const double buehlmann_He_halflife[];
 };
 
 

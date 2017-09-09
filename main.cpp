@@ -2,6 +2,6 @@
 #include "Deco.h"
 
 int main() {
-    Deco test(1, 0.006);
+    Deco test(0.006);
     return 0;
 }

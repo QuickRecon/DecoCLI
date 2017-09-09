@@ -1,5 +1,6 @@
 //
 // Created by aren on 9/7/17.
+// Algorithm based of http://www.lizardland.co.uk/DIYDeco.html
 //
 
 #include "Deco.h"
@@ -15,7 +16,7 @@ const double Deco::buehlmann_N2_b[] = { 0.5578, 0.6514, 0.7222, 0.7825,
                                   0.9092, 0.9222, 0.9319, 0.9403,
                                   0.9477, 0.9544, 0.9602, 0.9653 };
 
-const double Deco::buehlmann_N2_t_halflife[] = { 5.0, 8.0, 12.5, 18.5,
+const double Deco::buehlmann_N2_halflife[] = { 5.0, 8.0, 12.5, 18.5,
                                            27.0, 38.3, 54.3, 77.0,
                                            109.0, 146.0, 187.0, 239.0,
                                            305.0, 390.0, 498.0, 635.0 };
@@ -30,7 +31,7 @@ const double Deco::buehlmann_He_b[] = { 0.4770, 0.5747, 0.6527, 0.7223,
                                   0.8757, 0.8903, 0.8997, 0.9073,
                                   0.9122, 0.9171, 0.9217, 0.9267 };
 
-const double Deco::buehlmann_He_t_halflife[] = { 1.88, 3.02, 4.72, 6.99,
+const double Deco::buehlmann_He_halflife[] = { 1.88, 3.02, 4.72, 6.99,
                                            10.21, 14.48, 20.53, 29.11,
                                            41.20, 55.19, 70.69, 90.34,
                                            115.29, 147.42, 188.24, 240.03 };
@@ -41,16 +42,46 @@ Deco::gas::gas(double FrN2, double FrO2, double FrHe) {
     this->FrHe = FrHe;
 }
 
-Deco::Deco(double pA, double ppWv) {
+void Deco::SetPartialPressures(double depth) {
+    this->pA = 10*depth + 1;
+    this->ppN2 = gases.data()[0].FrN2 * (this->pA - this->ppWv);
+    this->ppHe = gases.data()[0].FrHe;
+    this->ppO2 = gases.data()[0].FrO2;
+}
+
+void Deco::AddDecent(double depth, double time) {
+    SetPartialPressures(depth);
+    double DeltaDepth = depth - this->depth;
+    for(int i = 0; i < 16; i++){
+        /// Calculate Nitrogen
+        double Pn;
+        double ppN2 = this->ppN2;
+        double DecentRateN2 = DeltaDepth/time;
+        double RN2 = DecentRateN2 * this->ppN2;
+        double kN2 = log(2)/Deco::buehlmann_N2_halflife[i];
+        Pn = ppN2 + RN2*(time-(1/kN2))-(ppN2 - this->Pn[i] - (RN2/kN2)) * exp(-kN2*time);
+
+        /// Calculate Helium
+        double Ph;
+        double ppHe = this->ppHe;
+        double DecentRateHe = DeltaDepth/time;
+        double RHe = DecentRateHe * this->ppHe;
+        double kHe = log(2)/Deco::buehlmann_N2_halflife[i];
+        Ph = ppN2 + RHe*(time-(1/kHe))-(ppHe - this->Ph[i] - (RHe/kHe)) * exp(-kHe*time);
+
+        /// Add to current gas loadings
+        SetGasLoadings(Pn, Ph, i);
+    }
+}
+
+Deco::Deco(double ppWv) {
     this->ppWv = ppWv;
-    this->pA = pA;
+    this->depth = 0;
 
     /// Configure default gas (Air)
     gases.push_back(Deco::gas(0.79, 0.21, 0));
 
-    this->ppN2 = gases.data()[0].FrN2 * (this->pA - this->ppWv);
-    this->ppHe = gases.data()[0].FrHe;
-    this->ppO2 = gases.data()[0].FrO2;
+    SetPartialPressures(0);
     /// Create gas compartments
     for(int i=0; i < 16; i++){
         this->SetGasLoadings(this->ppN2, 0, i);
