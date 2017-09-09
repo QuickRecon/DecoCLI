@@ -41,7 +41,7 @@ Deco::gas::gas(double FrN2, double FrO2, double FrHe) {
     this->FrHe = FrHe;
 }
 
-Deco::Deco(double ppWv, double pA) {
+Deco::Deco(double pA, double ppWv) {
     this->ppWv = ppWv;
     this->pA = pA;
 
@@ -49,7 +49,8 @@ Deco::Deco(double ppWv, double pA) {
     gases.push_back(Deco::gas(0.79, 0.21, 0));
 
     this->ppN2 = gases.data()[0].FrN2 * (this->pA - this->ppWv);
-
+    this->ppHe = gases.data()[0].FrHe;
+    this->ppO2 = gases.data()[0].FrO2;
     /// Create gas compartments
     for(int i=0; i < 16; i++){
         this->SetGasLoadings(this->ppN2, 0, i);

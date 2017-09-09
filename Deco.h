@@ -8,18 +8,21 @@
 #include <vector>
 
 class Deco {
-    /// Functions
-    Deco(double ppWv, double pA);
-    void SetGasLoadings(double Pn, double Ph, int compartmentIndex);
+    public:
+        /// Functions
+        Deco(double ppWv, double pA);
 
-    /// Gas storage
-    struct gas {
-        double FrN2;    // Fractional percent Nitrogen
-        double FrO2;    // Fractional percent Oxygen
-        double FrHe;    // Fractional percent Helium
-        gas(double FrN2, double FrO2, double FrHe);
-    };
-    std::vector<gas> gases;
+        void SetGasLoadings(double Pn, double Ph, int compartmentIndex);
+
+        void AddDecent(double depth, double time);
+        /// Gas storage
+        struct gas {
+            double FrN2;    // Fractional percent Nitrogen
+            double FrO2;    // Fractional percent Oxygen
+            double FrHe;    // Fractional percent Helium
+            gas(double FrN2, double FrO2, double FrHe);
+        };
+        std::vector<gas> gases;
 
     private:
         /// gas parameters
