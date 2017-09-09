@@ -49,6 +49,29 @@ void Deco::SetPartialPressures(double depth) {
     this->ppO2 = gases.data()[0].FrO2;
 }
 
+double Deco::GetCeiling() {
+    this->LimitingTissueIndex = 0;
+    for(int i = 0; i < 16; i++){
+        double Pn = this->Pn[i];
+        double aN2 = Deco::buehlmann_N2_a[i];
+        double bN2 = Deco::buehlmann_N2_b[i];
+
+        double Ph = this->Ph[i];
+        double aHe = Deco::buehlmann_He_a[i];
+        double bHe = Deco::buehlmann_He_b[i];
+
+        double a = ((aN2 * Pn) + (aHe * Ph))/(Pn + Ph);
+        double b = ((bN2 * Pn) + (bHe * Ph))/(Pn + Ph);
+
+        this->TissueAccentCeiling[i] = ((Pn + Ph)-a)/b;
+
+        if(this->TissueAccentCeiling[i] > this->TissueAccentCeiling[LimitingTissueIndex]){
+            LimitingTissueIndex = i;
+        }
+    }
+    return this->TissueAccentCeiling[LimitingTissueIndex];
+}
+
 void Deco::AddDecent(double depth, double time) {
     SetPartialPressures(depth);
     double DeltaDepth = depth - this->depth;
@@ -100,6 +123,7 @@ void Deco::AddBottom(double time) {
 Deco::Deco(double ppWv) {
     this->ppWv = ppWv;
     this->depth = 0;
+    this->AccentCeiling = 0;
 
     /// Configure default gas (Air)
     gases.push_back(Deco::gas(0.79, 0.21, 0));
@@ -107,6 +131,7 @@ Deco::Deco(double ppWv) {
     SetPartialPressures(0);
     /// Create gas compartments
     for(int i=0; i < 16; i++){
+        this->TissueAccentCeiling[i] = 0;
         this->SetGasLoadings(this->ppN2, 0, i);
     }
 }

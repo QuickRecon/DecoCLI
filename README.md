@@ -1,4 +1,6 @@
 # DecoCLI
-command line tool for preforming decompresson calculations (EXPERIMENTAL!!)
+command line tool for preforming decompression calculations (EXPERIMENTAL!!)
 
-DO NOT USE THIS FOR ANY DIVE CALCULATIONS!
+Buhlmann ZH-L16 Algorithm based on this website: http://www.lizardland.co.uk/DIYDeco.html
+
+#DO NOT USE THIS FOR ANY ACTUAL DIVE CALCULATIONS!

@@ -16,6 +16,8 @@ class Deco {
         void SetGasLoadings(double Pn, double Ph, int compartmentIndex);
         void SetPartialPressures(double depth);
 
+        double GetCeiling();
+
         void AddDecent(double depth, double time);
         void AddBottom(double time);
 
@@ -33,6 +35,7 @@ class Deco {
         double depth;
         double TissueAccentCeiling[16];
         double AccentCeiling;
+        int LimitingTissueIndex;
 
         /// gas parameters
         double ppN2;        // partial pressure Nitrogen
