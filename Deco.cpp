@@ -50,11 +50,16 @@ Deco::gas::gas(double FrN2, double FrO2, double FrHe) {
     this->FrHe = FrHe;
 }
 
+Deco::DecoStop::DecoStop(double Depth, double Time) {
+    this->Depth = Depth;
+    this->Time = Time;
+}
+
 void Deco::SetPartialPressures(double depth) {
     this->pA = depth;
-    this->ppN2 = gases.data()[0].FrN2 * this->pA;
-    this->ppHe = gases.data()[0].FrHe * this->pA;
-    this->ppO2 = gases.data()[0].FrO2 * this->pA;
+    this->ppN2 = gases.data()[0].FrN2 * (this->pA - this->ppWv);
+    this->ppHe = gases.data()[0].FrHe * (this->pA - this->ppWv);
+    this->ppO2 = gases.data()[0].FrO2 * (this->pA - this->ppWv);
 }
 
 double Deco::GetCeiling() {
@@ -82,13 +87,25 @@ double Deco::GetCeiling() {
     return ceiling;
 }
 
+int Deco::GetNoDecoTime() {
+    int noStopTime = 0;
+    bool inLimits = true;
+    while(inLimits){
+        Deco decoSim = Deco(*this);
+        decoSim.AddBottom(noStopTime);
+        inLimits = decoSim.GetCeiling() < 1;
+        noStopTime++;
+    }
+    noStopTime -= 1;
+    return noStopTime;
+}
+
 void Deco::AddDecent(double depth, double DecentRate) {
     DecentRate -= 1;
     //SetPartialPressures(depth);
     double DeltaDepth = depth - this->depth;
     for(int i = 0; i < 16; i++){
         /// General Values
-        double pA = depth;
         double t = DeltaDepth/DecentRate;
 
         /// Calculate Nitrogen
@@ -141,13 +158,36 @@ Deco::Deco(double ppWv) {
     this->AccentCeiling = -1000;
 
     /// Configure default gas (Air)
-    gases.push_back(Deco::gas(0.79, 0.21, 0));
+    gases.emplace_back(Deco::gas(0.79, 0.21, 0));
 
     SetPartialPressures(1);
     /// Create gas compartments
     for(int i=0; i < 16; i++){
         this->TissueAccentCeiling[i] = -1000;
         this->SetGasLoadings(this->ppN2, 0, i);
+    }
+}
+Deco::Deco(const Deco &deco) {
+
+    this->gases = deco.gases;
+    this->depth = deco.depth;
+
+    this->AccentCeiling = deco.AccentCeiling;
+    this->CurrentGas = deco.CurrentGas;
+    this->LimitingTissueIndex = deco.LimitingTissueIndex;
+
+    this->ppN2 = deco.ppN2;
+    this->ppHe = deco.ppHe;
+    this->ppO2 = deco.ppO2;
+
+    this->pA = deco.pA;
+    this->ppWv = deco.ppWv;
+
+    for(int i = 0; i < 16; i++){
+        this->TissueAccentCeiling[i] = deco.TissueAccentCeiling[i];
+        this->Pn[i] = deco.Pn[i];
+        this->Ph[i] = deco.Ph[i];
+        this->Pt[i] = deco.Pt[i];
     }
 }
 

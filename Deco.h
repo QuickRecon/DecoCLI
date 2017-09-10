@@ -6,17 +6,19 @@
 #define DECOCLI_DECO_H
 
 #include <vector>
-#include "math.h"
+#include <cmath>
 
 class Deco {
     public:
         /// Functions
-        Deco(double ppWv);
+        explicit Deco(double ppWv);
+        Deco(const Deco& deco);
 
         void SetGasLoadings(double Pn, double Ph, int compartmentIndex);
         void SetPartialPressures(double depth);
 
         double GetCeiling();
+        int GetNoDecoTime();
 
         void AddDecent(double depth, double time);
         void AddBottom(double time);
@@ -40,6 +42,12 @@ class Deco {
         double AccentCeiling;   // In meters
         int CurrentGas = 0;     // Index of current gas
         int LimitingTissueIndex;
+
+        struct DecoStop{
+            double Depth;
+            double Time;
+            DecoStop(double Depth, double Time);
+        };
 
         /// gas parameters
         double ppN2;            // partial pressure Nitrogen

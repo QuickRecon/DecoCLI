@@ -3,9 +3,8 @@
 
 int main() {
     Deco test(0);
-    //depths are in bar, times in minuets
-    test.AddDecent(Deco::MeterToBar(30),Deco::MeterToBar(30));
-    test.AddBottom(10);
-    std::cout << "Ceiling:" << Deco::BarToMeter(test.GetCeiling());
+    //depths are in bar, times in min
+    test.AddDecent(Deco::MeterToBar(20),Deco::MeterToBar(30));
+    std::cout << "Nst:" << test.GetNoDecoTime() << std::endl;
     return 0;
 }
