@@ -141,7 +141,7 @@ Deco::Deco(double ppWv) {
     this->AccentCeiling = -1000;
 
     /// Configure default gas (Air)
-    gases.push_back(Deco::gas(0.68, 0.21, 0));
+    gases.push_back(Deco::gas(0.79, 0.21, 0));
 
     SetPartialPressures(1);
     /// Create gas compartments
