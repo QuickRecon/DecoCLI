@@ -20,7 +20,7 @@ class Deco {
 
         std::vector<gas> gases;
 
-        typedef struct DecoStop{
+        struct DecoStop{
             double Depth;
             double Time;
             DecoStop(double Depth, double Time);
@@ -41,6 +41,7 @@ class Deco {
         double GetCeiling();
         int GetNoDecoTime();
         Deco::DecoStop GetNextDecoStop();
+        std::vector<DecoStop> GetDecoSchedule();
 
         void AddDecent(double depth, double DecentRate);
         void AddBottom(double time);

@@ -115,6 +115,18 @@ Deco::DecoStop Deco::GetNextDecoStop() {
     return {StopDepth, StopTime};
 }
 
+std::vector<Deco::DecoStop> Deco::GetDecoSchedule() {
+    std::vector<Deco::DecoStop> Schedule;
+    Deco decoSim = Deco(*this);
+    while(decoSim.GetCeiling() > 1){
+        Deco::DecoStop stop = decoSim.GetNextDecoStop();
+        Schedule.emplace_back(stop);
+        decoSim.AddDecent(stop.Depth, -Deco::MeterToBar(Deco::AccentRate));
+        decoSim.AddBottom(stop.Time);
+    }
+    return Schedule;
+}
+
 void Deco::AddDecent(double depth, double DecentRate) {
     DecentRate -= 1;
     //SetPartialPressures(depth);
