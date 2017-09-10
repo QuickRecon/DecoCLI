@@ -36,6 +36,14 @@ const double Deco::buehlmann_He_halflife[] = { 1.88, 3.02, 4.72, 6.99,
                                            41.20, 55.19, 70.69, 90.34,
                                            115.29, 147.42, 188.24, 240.03 };
 
+double Deco::BarToMeter(double bar) {
+    return 10*(bar-1);
+}
+
+double Deco::MeterToBar(double meter) {
+    return 0.1*meter+1;
+}
+
 Deco::gas::gas(double FrN2, double FrO2, double FrHe) {
     this->FrN2 = FrN2;
     this->FrO2 = FrO2;
@@ -43,10 +51,10 @@ Deco::gas::gas(double FrN2, double FrO2, double FrHe) {
 }
 
 void Deco::SetPartialPressures(double depth) {
-    this->pA = 10*depth + 1;
-    this->ppN2 = gases.data()[0].FrN2 * (this->pA - this->ppWv);
-    this->ppHe = gases.data()[0].FrHe;
-    this->ppO2 = gases.data()[0].FrO2;
+    this->pA = depth;
+    this->ppN2 = gases.data()[0].FrN2 * this->pA;
+    this->ppHe = gases.data()[0].FrHe * this->pA;
+    this->ppO2 = gases.data()[0].FrO2 * this->pA;
 }
 
 double Deco::GetCeiling() {
@@ -63,40 +71,47 @@ double Deco::GetCeiling() {
         double a = ((aN2 * Pn) + (aHe * Ph))/(Pn + Ph);
         double b = ((bN2 * Pn) + (bHe * Ph))/(Pn + Ph);
 
-        this->TissueAccentCeiling[i] = ((Pn + Ph)-a)/b;
+        this->TissueAccentCeiling[i] = ((Pn + Ph)-a)*b;
 
         if(this->TissueAccentCeiling[i] > this->TissueAccentCeiling[LimitingTissueIndex]){
             LimitingTissueIndex = i;
         }
     }
-    return this->TissueAccentCeiling[LimitingTissueIndex];
+    double ceiling = this->TissueAccentCeiling[LimitingTissueIndex];
+    this->AccentCeiling = ceiling;
+    return ceiling;
 }
 
-void Deco::AddDecent(double depth, double time) {
-    SetPartialPressures(depth);
+void Deco::AddDecent(double depth, double DecentRate) {
+    DecentRate -= 1;
+    //SetPartialPressures(depth);
     double DeltaDepth = depth - this->depth;
     for(int i = 0; i < 16; i++){
+        /// General Values
+        double pA = depth;
+        double t = DeltaDepth/DecentRate;
+
         /// Calculate Nitrogen
         double Pn;
-        double CurrentPn = this->Pn[i];
         double ppN2 = this->ppN2;
-        double DecentRateN2 = DeltaDepth/time;
-        double RN2 = DecentRateN2 * this->ppN2;
+        double CurrentPn = this->Pn[i];
+        double RN2 = DecentRate * this->gases[CurrentGas].FrN2;
         double kN2 = log(2)/Deco::buehlmann_N2_halflife[i];
-        Pn = ppN2 + RN2*(time-(1/kN2))-(ppN2 - CurrentPn - (RN2/kN2)) * exp(-kN2*time);
+        Pn = ppN2 + RN2*(t-(1/kN2))-(ppN2 - CurrentPn - (RN2/kN2)) * exp(-kN2*t);
 
         /// Calculate Helium
         double Ph;
-        double CurrentPh = this->Ph[i];
         double ppHe = this->ppHe;
-        double DecentRateHe = DeltaDepth/time;
-        double RHe = DecentRateHe * this->ppHe;
+        double CurrentPh = this->Ph[i];
+        double RHe = DecentRate * this->gases[CurrentGas].FrHe;
         double kHe = log(2)/Deco::buehlmann_He_halflife[i];
-        Ph = ppN2 + RHe*(time-(1/kHe))-(ppHe - CurrentPh - (RHe/kHe)) * exp(-kHe*time);
+        Ph = ppHe + RHe*(t-(1/kHe))-(ppHe - CurrentPh - (RHe/kHe)) * exp(-kHe*t);
 
         /// Set Loading
         SetGasLoadings(Pn, Ph, i);
     }
+    SetPartialPressures(depth);
+    this->depth = depth;
 }
 
 void Deco::AddBottom(double time) {
@@ -122,16 +137,16 @@ void Deco::AddBottom(double time) {
 
 Deco::Deco(double ppWv) {
     this->ppWv = ppWv;
-    this->depth = 0;
-    this->AccentCeiling = 0;
+    this->depth = 1; //1 bar at atmospheric pressure
+    this->AccentCeiling = -1000;
 
     /// Configure default gas (Air)
-    gases.push_back(Deco::gas(0.79, 0.21, 0));
+    gases.push_back(Deco::gas(0.68, 0.21, 0));
 
-    SetPartialPressures(0);
+    SetPartialPressures(1);
     /// Create gas compartments
     for(int i=0; i < 16; i++){
-        this->TissueAccentCeiling[i] = 0;
+        this->TissueAccentCeiling[i] = -1000;
         this->SetGasLoadings(this->ppN2, 0, i);
     }
 }
