@@ -10,6 +10,27 @@
 
 class Deco {
     public:
+        /// Data Structures
+        struct gas {
+            double FrN2;        // Fractional percent Nitrogen
+            double FrO2;        // Fractional percent Oxygen
+            double FrHe;        // Fractional percent Helium
+            gas(double FrN2, double FrO2, double FrHe);
+        };
+
+        std::vector<gas> gases;
+
+        typedef struct DecoStop{
+            double Depth;
+            double Time;
+            DecoStop(double Depth, double Time);
+        };
+
+        /// Public Dive parameters
+        double DecentRate = 30; // Decent Rate in meters
+        double AccentRate = -18;  // Accent Rate in meters
+        int CurrentGas = 0;     // Index of current gas
+
         /// Functions
         explicit Deco(double ppWv);
         Deco(const Deco& deco);
@@ -19,35 +40,20 @@ class Deco {
 
         double GetCeiling();
         int GetNoDecoTime();
+        Deco::DecoStop GetNextDecoStop();
 
-        void AddDecent(double depth, double time);
+        void AddDecent(double depth, double DecentRate);
         void AddBottom(double time);
 
         static double BarToMeter(double bar);
         static double MeterToBar(double meter);
-
-        /// Gas storage
-        struct gas {
-            double FrN2;        // Fractional percent Nitrogen
-            double FrO2;        // Fractional percent Oxygen
-            double FrHe;        // Fractional percent Helium
-            gas(double FrN2, double FrO2, double FrHe);
-        };
-        std::vector<gas> gases;
 
     private:
         /// Dive Parameters
         double depth;
         double TissueAccentCeiling[16]; //In Bar
         double AccentCeiling;   // In meters
-        int CurrentGas = 0;     // Index of current gas
         int LimitingTissueIndex;
-
-        struct DecoStop{
-            double Depth;
-            double Time;
-            DecoStop(double Depth, double Time);
-        };
 
         /// gas parameters
         double ppN2;            // partial pressure Nitrogen

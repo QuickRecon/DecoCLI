@@ -100,6 +100,21 @@ int Deco::GetNoDecoTime() {
     return noStopTime;
 }
 
+Deco::DecoStop Deco::GetNextDecoStop() {
+    // Round deco depth to next multiple of 3m (return as bar)
+    double StopDepth = Deco::MeterToBar(ceil(Deco::BarToMeter(Deco::GetCeiling())/3)*3);
+    int StopTime = 0;
+    bool inLimits = false;
+    while(!inLimits){
+        Deco decoSim = Deco(*this);
+        decoSim.AddDecent(StopDepth, -Deco::MeterToBar(Deco::AccentRate));
+        decoSim.AddBottom(StopTime);
+        inLimits = decoSim.GetCeiling() < StopDepth - 0.3;
+        StopTime++;
+    }
+    return {StopDepth, StopTime};
+}
+
 void Deco::AddDecent(double depth, double DecentRate) {
     DecentRate -= 1;
     //SetPartialPressures(depth);
