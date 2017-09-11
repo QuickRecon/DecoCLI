@@ -36,13 +36,7 @@ const double Deco::buehlmann_He_halflife[] = { 1.88, 3.02, 4.72, 6.99,
                                            41.20, 55.19, 70.69, 90.34,
                                            115.29, 147.42, 188.24, 240.03 };
 
-double Deco::BarToMeter(double bar) {
-    return 10*(bar-1);
-}
 
-double Deco::MeterToBar(double meter) {
-    return 0.1*meter+1;
-}
 
 Deco::gas::gas(double FrN2, double FrO2, double FrHe) {
     this->FrN2 = FrN2;
@@ -102,12 +96,13 @@ int Deco::GetNoDecoTime() {
 
 Deco::DecoStop Deco::GetNextDecoStop() {
     // Round deco depth to next multiple of 3m (return as bar)
-    double StopDepth = Deco::MeterToBar(ceil(Deco::BarToMeter(Deco::GetCeiling())/3)*3);
+    double StopDepth = MeterToBar(ceil(BarToMeter(Deco::GetCeiling())/3)*3);
+
     int StopTime = 0;
     bool inLimits = false;
     while(!inLimits){
         Deco decoSim = Deco(*this);
-        decoSim.AddDecent(StopDepth, -Deco::MeterToBar(Deco::AccentRate));
+        decoSim.AddDecent(StopDepth, -MeterToBar(Deco::AccentRate));
         decoSim.AddBottom(StopTime);
         inLimits = decoSim.GetCeiling() < StopDepth - 0.3;
         StopTime++;
@@ -121,7 +116,7 @@ std::vector<Deco::DecoStop> Deco::GetDecoSchedule() {
     while(decoSim.GetCeiling() > 1){
         Deco::DecoStop stop = decoSim.GetNextDecoStop();
         Schedule.emplace_back(stop);
-        decoSim.AddDecent(stop.Depth, -Deco::MeterToBar(Deco::AccentRate));
+        decoSim.AddDecent(stop.Depth, -MeterToBar(Deco::AccentRate));
         decoSim.AddBottom(stop.Time);
     }
     return Schedule;
@@ -129,7 +124,6 @@ std::vector<Deco::DecoStop> Deco::GetDecoSchedule() {
 
 void Deco::AddDecent(double depth, double DecentRate) {
     DecentRate -= 1;
-    //SetPartialPressures(depth);
     double DeltaDepth = depth - this->depth;
     for(int i = 0; i < 16; i++){
         /// General Values
@@ -167,7 +161,7 @@ void Deco::AddBottom(double time) {
         double halftimeN2 = Deco::buehlmann_N2_halflife[i];
         Pn = CurrentPn + (ppN2-CurrentPn)*(1-pow(2,-time/halftimeN2));
 
-        // Calculate Helium
+        /// Calculate Helium
         double Ph;
         double CurrentPh = this->Ph[i];
         double ppHe = this->ppHe;

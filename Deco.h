@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <cmath>
+#include "Utilities.h"
 
 class Deco {
     public:
@@ -45,10 +46,6 @@ class Deco {
 
         void AddDecent(double depth, double DecentRate);
         void AddBottom(double time);
-
-        static double BarToMeter(double bar);
-        static double MeterToBar(double meter);
-
     private:
         /// Dive Parameters
         double depth;
