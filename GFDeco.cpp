@@ -58,7 +58,7 @@ void GFDeco::SetPartialPressures(double depth) {
 double GFDeco::GetCeiling() {
     this->LimitingTissueIndex = 0;
     for(int i = 0; i < 16; i++){
-        double currentCeiling = 1;
+        double currentCeiling = 0;
         bool inLimits = false;
         while(!inLimits){
             double Pn = this->Pn[i];
@@ -67,8 +67,7 @@ double GFDeco::GetCeiling() {
             double MaxGF = GetGFPoint(currentCeiling);
             double TheoreticalGF = ((Pn+Ph)-pA)/(this->GetMValue(i,currentCeiling)-pA);
 
-
-            if(TheoreticalGF < MaxGF){
+            if(TheoreticalGF < MaxGF && !isnanf(TheoreticalGF)){
                 inLimits = true;
             } else{
                 currentCeiling += 0.1;
@@ -86,16 +85,17 @@ double GFDeco::GetCeiling() {
 }
 
 double GFDeco::GetMValue(int TissueIndex, double depth){
-    double Pn = this->Pn[TissueIndex];
+    SetPartialPressures(depth);
+    double ppN2 = this->ppN2;
     double aN2 = GFDeco::buehlmann_N2_a[TissueIndex];
     double bN2 = GFDeco::buehlmann_N2_b[TissueIndex];
 
-    double Ph = this->Ph[TissueIndex];
+    double ppHe = this->ppHe;
     double aHe = GFDeco::buehlmann_He_a[TissueIndex];
     double bHe = GFDeco::buehlmann_He_b[TissueIndex];
 
-    double a = ((aN2 * Pn) + (aHe * Ph))/(Pn + Ph);
-    double b = ((bN2 * Pn) + (bHe * Ph))/(Pn + Ph);
+    double a = ((aN2 * ppN2) + (aHe * ppHe))/(ppN2 + ppHe);
+    double b = ((bN2 * ppN2) + (bHe * ppHe))/(ppN2 + ppHe);
 
     return (depth/b) + a;
 }
@@ -105,7 +105,7 @@ double GFDeco::GetGFPoint(double depth) {
     double GFLow = this->GFLow;
     double LowDepth = this->MaximumDepth;
 
-    return GFHigh - ((GFHigh-GFLow)/LowDepth) * depth;
+    return GFHigh - ((GFHigh - GFLow)/LowDepth) * depth;
 }
 
 int GFDeco::GetNoDecoTime() {
