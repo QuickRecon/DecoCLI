@@ -80,7 +80,6 @@ double Deco::GetCeiling() {
     this->AccentCeiling = ceiling;
     return ceiling;
 }
-
 int Deco::GetNoDecoTime() {
     int noStopTime = 0;
     bool inLimits = true;
@@ -124,7 +123,7 @@ std::vector<Deco::DecoStop> Deco::GetDecoSchedule() {
 
 void Deco::AddDecent(double depth, double DecentRate) {
     DecentRate -= 1;
-    double DeltaDepth = depth - this->depth;
+    double DeltaDepth = depth - this->Depth;
     for(int i = 0; i < 16; i++){
         /// General Values
         double t = DeltaDepth/DecentRate;
@@ -149,7 +148,7 @@ void Deco::AddDecent(double depth, double DecentRate) {
         SetGasLoadings(Pn, Ph, i);
     }
     SetPartialPressures(depth);
-    this->depth = depth;
+    this->Depth = depth;
 }
 
 void Deco::AddBottom(double time) {
@@ -175,7 +174,7 @@ void Deco::AddBottom(double time) {
 
 Deco::Deco(double ppWv) {
     this->ppWv = ppWv;
-    this->depth = 1; //1 bar at atmospheric pressure
+    this->Depth = 1; //1 bar at atmospheric pressure
     this->AccentCeiling = -1000;
 
     /// Configure default gas (Air)
@@ -191,7 +190,7 @@ Deco::Deco(double ppWv) {
 Deco::Deco(const Deco &deco) {
 
     this->gases = deco.gases;
-    this->depth = deco.depth;
+    this->Depth = deco.Depth;
 
     this->AccentCeiling = deco.AccentCeiling;
     this->CurrentGas = deco.CurrentGas;
