@@ -9,7 +9,7 @@
 #include <cmath>
 #include "Utilities.h"
 
-class Deco {
+class BMDeco {
     public:
         /// Data Structures
         struct gas {
@@ -33,15 +33,15 @@ class Deco {
         int CurrentGas = 0;     // Index of current gas
 
         /// Functions
-        explicit Deco(double ppWv);
-        Deco(const Deco& deco);
+        explicit BMDeco(double ppWv);
+        BMDeco(const BMDeco& deco);
 
         void SetGasLoadings(double Pn, double Ph, int compartmentIndex);
         void SetPartialPressures(double depth);
 
         double GetCeiling();
         int GetNoDecoTime();
-        Deco::DecoStop GetNextDecoStop();
+        BMDeco::DecoStop GetNextDecoStop();
         std::vector<DecoStop> GetDecoSchedule();
 
         void AddDecent(double depth, double DecentRate);
