@@ -1,5 +1,5 @@
 # DecoCLI
-command line tool for preforming decompression calculations (EXPERIMENTAL!!)
+command line tool for performing decompression calculations (EXPERIMENTAL!!)
 
 Buhlmann ZH-L16 Algorithm based on this website: http://www.lizardland.co.uk/DIYDeco.html
 
