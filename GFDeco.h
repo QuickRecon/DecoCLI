@@ -1,16 +1,16 @@
 //
-// Created by aren on 9/7/17.
+// Created by aren on 9/12/17.
 //
 
-#ifndef DECOCLI_DECO_H
-#define DECOCLI_DECO_H
+#ifndef DECOCLI_GFDECO_H
+#define DECOCLI_GFDECO_H
 
 #include <vector>
 #include <cmath>
 #include "Utilities.h"
 
-class Deco {
-    public:
+class GFDeco {
+public:
         /// Data Structures
         struct gas {
             double FrN2;        // Fractional percent Nitrogen
@@ -29,26 +29,31 @@ class Deco {
 
         /// Public Dive parameters
         double DecentRate = 30; // Decent Rate in meters
-        double AccentRate = -18;  // Accent Rate in meters
+        double GFHigh = 0.8;    // Gradient Factor High
+        double GFLow = 0.3;     // Gradient Factor Low
+        double AccentRate = -18;// Accent Rate in meters
         int CurrentGas = 0;     // Index of current gas
 
         /// Functions
-        explicit Deco(double ppWv);
-        Deco(const Deco& deco);
+        explicit GFDeco(double ppWv);
+        GFDeco(const GFDeco& deco);
 
         void SetGasLoadings(double Pn, double Ph, int compartmentIndex);
         void SetPartialPressures(double depth);
 
         double GetCeiling();
         int GetNoDecoTime();
-        Deco::DecoStop GetNextDecoStop();
+        double GetMValue(int TissueIndex, double depth);
+        double GetGFPoint(double depth);
+        GFDeco::DecoStop GetNextDecoStop();
         std::vector<DecoStop> GetDecoSchedule();
 
         void AddDecent(double depth, double DecentRate);
         void AddBottom(double time);
     private:
         /// Dive Parameters
-        double depth;
+        double Depth = 1;
+        double MaximumDepth = 1;
         double TissueAccentCeiling[16]; //In Bar
         double AccentCeiling;   // In meters
         int LimitingTissueIndex;
@@ -78,4 +83,4 @@ class Deco {
 };
 
 
-#endif //DECOCLI_DECO_H
+#endif //DECOCLI_GFDECO_H
