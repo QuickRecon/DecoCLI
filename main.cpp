@@ -2,7 +2,7 @@
 #include "GFDeco.h"
 
 int main() {
-    GFDeco test(0);
+    GFDeco test;
     //depths are in bar, times in min
     test.AddDecent(MeterToBar(60), MeterToBar(test.DecentRate));
     test.AddBottom(30);
