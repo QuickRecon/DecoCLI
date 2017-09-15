@@ -23,8 +23,8 @@ public:
 
     struct DecoStop{
         double Depth;
-        double Time;
-        DecoStop(double Depth, double Time);
+        int Time;
+        DecoStop(double Depth, int Time);
     };
 
     /// Public Dive parameters

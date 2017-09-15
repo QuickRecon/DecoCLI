@@ -16,7 +16,7 @@ double GFDeco::GetCeiling(){
             double MaxGF = GetGFPoint(currentCeiling);
             double TheoreticalGF = ((Pn+Ph)-pA)/(this->GetMValue(i,currentCeiling)-pA);
 
-            if(TheoreticalGF < MaxGF && !isnanf(TheoreticalGF)){
+            if(TheoreticalGF < MaxGF && !isnan(TheoreticalGF)){
                 inLimits = true;
             } else{
                 currentCeiling += 0.1;

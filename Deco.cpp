@@ -43,7 +43,7 @@ Deco::gas::gas(double FrN2, double FrO2, double FrHe) {
     this->FrHe = FrHe;
 }
 
-Deco::DecoStop::DecoStop(double Depth, double Time) {
+Deco::DecoStop::DecoStop(double Depth, int Time) {
     this->Depth = Depth;
     this->Time = Time;
 }
