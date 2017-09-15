@@ -20,6 +20,8 @@
 #include "GFDeco.h"
 #include "BMDeco.h"
 
+bool AutoShowLicense = true;
+
 int main(int argc, char* argv[]) {
     for(int i = 0; i < argc; i++){
         if(strcmp(argv[i],"--ShowLicense") == 0){
@@ -45,6 +47,7 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
+    ShowUsage();
 
     return 0;
 }

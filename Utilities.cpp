@@ -17,8 +17,6 @@
 
 #include <iostream>
 
-bool AutoShowLicense = true;
-
 double BarToMeter(double bar) {
     return 10*(bar-1);
 }
@@ -63,6 +61,7 @@ void ShowUsage(){
             "This program is designed to perform (diving) decompression calculations.\n"
             "\n"
             "General Parameters:\n"
-            "--ShowLicense  :   Show the extended license prompt"
-            "--HideLicense  :   Hide the automatic license prompt";
+            "--ShowLicense  :   Show the extended license prompt\n"
+            "--HideLicense  :   Hide the automatic license prompt\n";
+    std::cout << Usage << std::endl;
 }
