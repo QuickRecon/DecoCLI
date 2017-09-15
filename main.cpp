@@ -19,6 +19,7 @@
 #include <iostream>
 #include "GFDeco.h"
 #include "BMDeco.h"
+#include <cstring>
 
 bool AutoShowLicense = true;
 

@@ -30,7 +30,7 @@ double GFDeco::GetCeiling(){
             double MaxGF = GetGFPoint(currentCeiling);
             double TheoreticalGF = ((Pn+Ph)-pA)/(this->GetMValue(i,currentCeiling)-pA);
 
-            if(TheoreticalGF < MaxGF && !isnan(TheoreticalGF)){
+            if(TheoreticalGF < MaxGF && !std::isnan(TheoreticalGF)){
                 inLimits = true;
             } else{
                 currentCeiling += 0.1;
@@ -132,11 +132,11 @@ Deco::DecoStop GFDeco::GetNextDecoStop() {
     int StopTime = 0;
     bool inLimits = false;
     while(!inLimits){
+        StopTime++;
         GFDeco DecoSim = GFDeco(*this);
         DecoSim.AddDecent(StopDepth, -MeterToBar(Deco::AccentRate));
         DecoSim.AddBottom(StopTime);
         inLimits = DecoSim.GetCeiling() < StopDepth - 0.3;
-        StopTime++;
     }
     return {StopDepth, StopTime};
 }
