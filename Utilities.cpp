@@ -15,7 +15,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
 
-#include <iostream>
+#include "Utilities.h"
 
 double BarToMeter(double bar) {
     return 10*(bar-1);
@@ -23,6 +23,15 @@ double BarToMeter(double bar) {
 
 double MeterToBar(double meter) {
     return 0.1*meter+1;
+}
+
+std::vector<float> StringSplit(std::string str, char splitchar){
+    std::replace(str.begin(), str.end(), splitchar, ' ');  // replace splitchar by ' '
+    std::vector<float> array;
+    std::stringstream ss(str);
+    int temp;
+    while (ss >> temp)
+        array.emplace_back(temp);
 }
 
 void ShowLicense(){
@@ -56,12 +65,20 @@ void ShowLimitedLicense(){
     std::cout << License << std::endl << std::endl;
 }
 
-void ShowUsage(){
+void ShowUsage(const std::string executable){
     std::string Usage =
             "This program is designed to perform (diving) decompression calculations.\n"
             "\n"
+            "General use: " + executable + "<General Parameters> <Model Parameters>"
             "General Parameters:\n"
             "--ShowLicense  :   Show the extended license prompt\n"
-            "--HideLicense  :   Hide the automatic license prompt\n";
+            "--HideLicense  :   Hide the automatic license prompt\n"
+            "--quiet        :   Suppress unnecessary outputs\n"
+            "\n"
+            "Model Parameters:\n"
+            "G\n"
+            "   Adds a gas to the gas list, takes the form of G<FrN2>:<FrO2>:<FrHe>,\n"
+            "   air (expressed as G0.21:0.79:0) is automatically added as the zeroth element\n"
+            "   and gases can be accessed in the order they are added.";
     std::cout << Usage << std::endl;
 }

@@ -22,19 +22,33 @@
 #include <cstring>
 
 bool AutoShowLicense = true;
+bool verbose = true;
 
 int main(int argc, char* argv[]) {
+
+    GFDeco DecoActual; //initialise Deco Model
+
     for(int i = 0; i < argc; i++){
-        if(strcmp(argv[i],"--ShowLicense") == 0){
+        std::string argument(argv[i]);
+        std::string FirstLetter = argument.substr(0,1);
+        if(argument == "--ShowLicense"){
             ShowLicense();
             return 0;
-        } else if(strcmp(argv[i], "--HideLicense") == 0){
+        } else if(argument ==  "--HideLicense"){
             AutoShowLicense = false;
+        } else if( FirstLetter == "G"){
+            std::string substring = argument.substr(1,argument.size());
+            std::vector<float> parameters = StringSplit(substring, ':');
+            DecoActual.AddGas(parameters[0], parameters[1], parameters[3]);
+        } else if(argument == "--quite") {
+            verbose = false;
+            AutoShowLicense = false;
+            return 0;
         }
     }
     if(AutoShowLicense){ShowLimitedLicense();};
     if(argc >= 3){
-        GFDeco DecoActual;
+
         //depths are in bar, times in min
         DecoActual.AddDecent(MeterToBar(60), MeterToBar(DecoActual.DecentRate));
         DecoActual.AddBottom(30);
@@ -48,7 +62,7 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-    ShowUsage();
+    ShowUsage(argv[0]);
 
     return 0;
 }
