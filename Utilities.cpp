@@ -15,8 +15,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
 
-
 #include <iostream>
+
+bool AutoShowLicense = true;
 
 double BarToMeter(double bar) {
     return 10*(bar-1);
@@ -55,4 +56,13 @@ void ShowLimitedLicense(){
             "    This is free software, and you are welcome to redistribute it\n"
             "    under certain conditions; use the ShowLicense option for details";
     std::cout << License << std::endl << std::endl;
+}
+
+void ShowUsage(){
+    std::string Usage =
+            "This program is designed to perform (diving) decompression calculations.\n"
+            "\n"
+            "General Parameters:\n"
+            "--ShowLicense  :   Show the extended license prompt"
+            "--HideLicense  :   Hide the automatic license prompt";
 }

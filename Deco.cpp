@@ -169,6 +169,6 @@ void Deco::SetGasLoadings(double Pn, double Ph, int compartmentIndex) {
 }
 
 void Deco::SetppWv(double ppWv) {
-    this->ppWv;
+    this->ppWv = ppWv;
     SetPartialPressures(this->Depth);
 }

@@ -15,29 +15,36 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
 
+//
 #include <iostream>
 #include "GFDeco.h"
 #include "BMDeco.h"
 
 int main(int argc, char* argv[]) {
-    if(argc == 2){
-        if(strcmp(argv[1],"ShowLicense") == 0){
+    for(int i = 0; i < argc; i++){
+        if(strcmp(argv[i],"--ShowLicense") == 0){
             ShowLicense();
             return 0;
+        } else if(strcmp(argv[i], "--HideLicense") == 0){
+            AutoShowLicense = false;
         }
     }
-
-    ShowLimitedLicense();
-    GFDeco test;
-    //depths are in bar, times in min
-    test.AddDecent(MeterToBar(60), MeterToBar(test.DecentRate));
-    test.AddBottom(30);
-    std::cout << "Ceiling:" << BarToMeter(test.GetCeiling()) << std::endl;
-    std::vector<GFDeco::DecoStop> Schedule = test.GetDecoSchedule();
-    for (int i = 0; i < Schedule.size(); i++) {
-        std::cout << "Deco Depth(" << i << "): " << BarToMeter(Schedule[i].Depth) << std::endl;
-        std::cout << "Deco time(" << i << "): " << Schedule[i].Time << std::endl;
-        std::cout << std::endl;
+    if(AutoShowLicense){ShowLimitedLicense();};
+    if(argc >= 3){
+        GFDeco DecoActual;
+        //depths are in bar, times in min
+        DecoActual.AddDecent(MeterToBar(60), MeterToBar(DecoActual.DecentRate));
+        DecoActual.AddBottom(30);
+        std::cout << "Ceiling:" << BarToMeter(DecoActual.GetCeiling()) << std::endl;
+        std::vector<GFDeco::DecoStop> Schedule = DecoActual.GetDecoSchedule();
+        for (int i = 0; i < Schedule.size(); i++) {
+            std::cout << "Deco Depth(" << i << "): " << BarToMeter(Schedule[i].Depth) << std::endl;
+            std::cout << "Deco time(" << i << "): " << Schedule[i].Time << std::endl;
+            std::cout << std::endl;
+        }
+        return 0;
     }
+
+
     return 0;
 }
