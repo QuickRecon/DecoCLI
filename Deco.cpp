@@ -1,10 +1,24 @@
+//  Program for calculating decompression stops and no stop times using buehlmann and buehlmann derived algorithms
+//  Copyright (C) 2017 Aren Leishman
 //
-// Created by aren on 9/14/17.
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
 //
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>
+//
+
 
 #include "Deco.h"
 
-/// Compartment Tables (Taken from Subsurface Deco.c)
+/// Compartment Tables (Taken from Subsurface Deco.c and used under the GPL-2.0 on the 9/9/2017)
 const double Deco::buehlmann_N2_a[] = { 1.1696, 1.0, 0.8618, 0.7562,
                                           0.62, 0.5043, 0.441, 0.4,
                                           0.375, 0.35, 0.3295, 0.3065,
