@@ -82,10 +82,14 @@ void ShowUsage(const std::string executable){
             "--HideLicense  :   Hide the automatic license prompt\n"
             "--quiet        :   Suppress unnecessary outputs\n"
             "\n"
-            "Model Parameters:\n"
+            "Dive Parameters:\n"
             "G\n"
             "   Adds a gas to the gas list, takes the form of G<FrN2>:<FrO2>:<FrHe>,\n"
             "   air (expressed as G0.21:0.79:0) is automatically added as the zeroth element\n"
-            "   and gases can be accessed in the order they are added.";
+            "   and gases can be accessed in the order they are added.\n"
+            "D\n"
+            "   Add depths and times to the model, takes the form D<Depth1>,<Time1>:<Depth2>,<Time2>...\n"
+            "   For example a dive that goes to 10 meters for 10 minutes then goes to 60 meters for 5 minutes\n"
+            "   would be expressed as D10,10:60,5";
     std::cout << Usage << std::endl;
 }
