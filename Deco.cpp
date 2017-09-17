@@ -128,7 +128,7 @@ Deco::Deco() {
     this->AccentCeiling = -1000;
 
     /// Configure default gas (Air)
-    gases.emplace_back(Deco::gas(0.79, 0.21, 0));
+    AddGas(0.79, 0.21, 0);
 
     SetPartialPressures(1);
     /// Create gas compartments
@@ -169,6 +169,10 @@ void Deco::SetGasLoadings(double Pn, double Ph, int compartmentIndex) {
 }
 
 void Deco::SetppWv(double ppWv) {
-    this->ppWv;
+    this->ppWv = ppWv;
     SetPartialPressures(this->Depth);
+}
+
+void Deco::AddGas(double FrN2, double FrO2, double FrHe) {
+    gases.emplace_back(Deco::gas(FrN2, FrO2, FrHe));
 }

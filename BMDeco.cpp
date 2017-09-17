@@ -83,20 +83,6 @@ std::vector<BMDeco::DecoStop> BMDeco::GetDecoSchedule() {
     return Schedule;
 }
 
-BMDeco::BMDeco() {
-    this->Depth = 1; //1 bar at atmospheric pressure
-    this->AccentCeiling = -1000;
-
-    /// Configure default gas (Air)
-    gases.emplace_back(BMDeco::gas(0.79, 0.21, 0));
-
-    SetPartialPressures(1);
-    /// Create gas compartments
-    for(int i=0; i < 16; i++){
-        this->TissueAccentCeiling[i] = -1000;
-        this->SetGasLoadings(this->ppN2, 0, i);
-    }
-}
 BMDeco::BMDeco(const BMDeco &deco) {
 
     this->gases = deco.gases;

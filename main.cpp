@@ -15,29 +15,63 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
 
+//
 #include <iostream>
 #include "GFDeco.h"
 #include "BMDeco.h"
+#include <cstring>
 
-int main(int argc, char* argv[]) {
-    if(argc == 2){
-        if(strcmp(argv[1],"ShowLicense") == 0){
+bool AutoShowLicense = true;
+bool verbose = true;
+
+int main(int argc, char *argv[]) {
+
+    GFDeco DecoActual; //initialise Deco Model
+
+    for (int i = 0; i < argc; i++) {
+        std::string argument(argv[i]);
+        std::string FirstLetter = argument.substr(0, 1);
+        if (argument == "--ShowLicense") {
             ShowLicense();
             return 0;
+        } else if (argument == "--HideLicense") {
+            AutoShowLicense = false;
+        } else if (FirstLetter == "G") {
+            std::string substring = argument.substr(1, argument.size());
+            std::vector<std::string> parameters = split(substring, ':');
+            double FrO2 = stod(parameters[0]);
+            double FrN2 = stod(parameters[1]);
+            double FrHe = stod(parameters[2]);
+            DecoActual.AddGas(FrO2,FrN2,FrHe);
+        } else if (argument == "--quite") {
+            verbose = false;
+            AutoShowLicense = false;
+            return 0;
+        } else if (FirstLetter == "D"){
+            std::string substring = argument.substr(1, argument.size());
+            std::vector<std::string> parameters = split(substring, ':');
+            for (const auto &parameter : parameters) {
+                std::vector<std::string> depths = split(parameter,',');
+                double depth = stod(depths[0]);
+                double time = stod(depths[1]);
+                DecoActual.AddDecent(MeterToBar(depth), MeterToBar(DecoActual.DecentRate));
+                DecoActual.AddBottom(time);
+            }
         }
     }
-
-    ShowLimitedLicense();
-    GFDeco test;
-    //depths are in bar, times in min
-    test.AddDecent(MeterToBar(60), MeterToBar(test.DecentRate));
-    test.AddBottom(30);
-    std::cout << "Ceiling:" << BarToMeter(test.GetCeiling()) << std::endl;
-    std::vector<GFDeco::DecoStop> Schedule = test.GetDecoSchedule();
-    for (int i = 0; i < Schedule.size(); i++) {
-        std::cout << "Deco Depth(" << i << "): " << BarToMeter(Schedule[i].Depth) << std::endl;
-        std::cout << "Deco time(" << i << "): " << Schedule[i].Time << std::endl;
-        std::cout << std::endl;
+    if (AutoShowLicense) { ShowLimitedLicense(); };
+    if (argc >= 3) {
+        std::cout << "Ceiling:" << BarToMeter(DecoActual.GetCeiling()) << std::endl;
+        std::vector<GFDeco::DecoStop> Schedule = DecoActual.GetDecoSchedule();
+        for (int i = 0; i < Schedule.size(); i++) {
+            std::cout << "Deco Depth(" << i << "): " << BarToMeter(Schedule[i].Depth) << std::endl;
+            std::cout << "Deco time(" << i << "): " << Schedule[i].Time << std::endl;
+            std::cout << std::endl;
+        }
+        return 0;
     }
+
+    ShowUsage(argv[0]);
+
     return 0;
 }

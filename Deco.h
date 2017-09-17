@@ -57,6 +57,7 @@ public:
 
     void AddDecent(double depth, double DecentRate);
     void AddBottom(double time);
+    void AddGas(double FrN2, double FrO2, double FrHe);
 
     /// Dive Parameters
     double Depth = 1;

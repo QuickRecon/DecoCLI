@@ -15,6 +15,12 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
 
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstring>
+#include <sstream>
+#include <iterator>
 
 #ifndef DECOCLI_UTILITIES_H
 #define DECOCLI_UTILITIES_H
@@ -23,5 +29,7 @@ double BarToMeter(double bar);
 double MeterToBar(double meter);
 void ShowLicense();
 void ShowLimitedLicense();
+void ShowUsage(std::string executable);
+std::vector<std::string> split(const std::string &s, char delim);
 
 #endif //DECOCLI_UTILITIES_H
