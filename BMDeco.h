@@ -24,7 +24,7 @@
 class BMDeco: public Deco{
 public:
     /// Functions
-    explicit BMDeco();
+    explicit BMDeco() = default;
     BMDeco(const BMDeco& deco);
 
     double GetCeiling();

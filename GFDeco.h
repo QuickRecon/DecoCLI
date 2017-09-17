@@ -28,7 +28,7 @@ public:
     double GFLow = 0.3;     // Gradient Factor Low
 
     /// Functions
-    explicit GFDeco();
+    explicit GFDeco() = default;
     GFDeco(const GFDeco& deco);
     double GetCeiling();
     int GetNoDecoTime();

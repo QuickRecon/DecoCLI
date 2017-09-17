@@ -38,20 +38,29 @@ int main(int argc, char *argv[]) {
             AutoShowLicense = false;
         } else if (FirstLetter == "G") {
             std::string substring = argument.substr(1, argument.size());
-            std::vector<float> parameters = StringSplit(substring, ':');
-            DecoActual.AddGas(parameters[0], parameters[1], parameters[3]);
+            std::vector<std::string> parameters = split(substring, ':');
+            double FrO2 = stod(parameters[0]);
+            double FrN2 = stod(parameters[1]);
+            double FrHe = stod(parameters[2]);
+            DecoActual.AddGas(FrO2,FrN2,FrHe);
         } else if (argument == "--quite") {
             verbose = false;
             AutoShowLicense = false;
             return 0;
+        } else if (FirstLetter == "D"){
+            std::string substring = argument.substr(1, argument.size());
+            std::vector<std::string> parameters = split(substring, ':');
+            for (const auto &parameter : parameters) {
+                std::vector<std::string> depths = split(parameter,',');
+                double depth = stod(depths[0]);
+                double time = stod(depths[1]);
+                DecoActual.AddDecent(MeterToBar(depth), MeterToBar(DecoActual.DecentRate));
+                DecoActual.AddBottom(time);
+            }
         }
     }
     if (AutoShowLicense) { ShowLimitedLicense(); };
     if (argc >= 3) {
-
-        //depths are in bar, times in min
-        DecoActual.AddDecent(MeterToBar(60), MeterToBar(DecoActual.DecentRate));
-        DecoActual.AddBottom(30);
         std::cout << "Ceiling:" << BarToMeter(DecoActual.GetCeiling()) << std::endl;
         std::vector<GFDeco::DecoStop> Schedule = DecoActual.GetDecoSchedule();
         for (int i = 0; i < Schedule.size(); i++) {

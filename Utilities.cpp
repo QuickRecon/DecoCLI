@@ -25,13 +25,21 @@ double MeterToBar(double meter) {
     return 0.1*meter+1;
 }
 
-std::vector<float> StringSplit(std::string str, char splitchar){
-    std::replace(str.begin(), str.end(), splitchar, ' ');  // replace splitchar by ' '
-    std::vector<float> array;
-    std::stringstream ss(str);
-    int temp;
-    while (ss >> temp)
-        array.emplace_back(temp);
+template<typename Out>
+
+void split(const std::string &s, char delim, Out result) {
+    std::stringstream ss;
+    ss.str(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        *(result++) = item;
+    }
+}
+
+std::vector<std::string> split(const std::string &s, char delim) {
+    std::vector<std::string> elems;
+    split(s, delim, std::back_inserter(elems));
+    return elems;
 }
 
 void ShowLicense(){
@@ -57,10 +65,10 @@ void ShowLicense(){
 
 void ShowLimitedLicense(){
     std::string License =
-            "DecoCLI  Copyright (C) 2017 Aren Leishman\n"
+            "DecoCLI Copyright (C) 2017 Aren Leishman\n\n"
             "This program comes with ABSOLUTELY NO WARRANTY.\n"
             "This is free software, and you are welcome to redistribute it\n"
-            "under certain conditions; use the ShowLicense option for details";
+            "under certain conditions; use the --ShowLicense option for details";
     std::cout << License << std::endl << std::endl;
 }
 

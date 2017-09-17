@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <cstring>
 #include <sstream>
+#include <iterator>
 
 #ifndef DECOCLI_UTILITIES_H
 #define DECOCLI_UTILITIES_H
@@ -29,6 +30,6 @@ double MeterToBar(double meter);
 void ShowLicense();
 void ShowLimitedLicense();
 void ShowUsage(std::string executable);
-std::vector<float> StringSplit(std::string str, char splitchar);
+std::vector<std::string> split(const std::string &s, char delim);
 
 #endif //DECOCLI_UTILITIES_H
