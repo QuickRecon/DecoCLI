@@ -21,14 +21,15 @@
 double GFDeco::GetCeiling(){
     this->LimitingTissueIndex = 0;
     for(int i = 0; i < 16; i++){
+        GFDeco DecoSim = GFDeco(*this);
         double currentCeiling = 0;
         bool inLimits = false;
         while(!inLimits){
-            double Pn = this->Pn[i];
-            double Ph = this->Ph[i];
-            double pA = this->pA;
-            double MaxGF = GetGFPoint(currentCeiling);
-            double TheoreticalGF = ((Pn+Ph)-pA)/(this->GetMValue(i,currentCeiling)-pA);
+            double Pn = DecoSim.Pn[i];
+            double Ph = DecoSim.Ph[i];
+            double pA = DecoSim.pA;
+            double MaxGF = DecoSim.GetGFPoint(currentCeiling);
+            double TheoreticalGF = ((Pn+Ph)-pA)/(DecoSim.GetMValue(i,currentCeiling)-pA);
 
             if(TheoreticalGF < MaxGF && !std::isnan(TheoreticalGF)){
                 inLimits = true;

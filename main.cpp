@@ -61,12 +61,15 @@ int main(int argc, char *argv[]) {
     }
     if (AutoShowLicense) { ShowLimitedLicense(); };
     if (argc >= 3) {
-        std::cout << "Ceiling:" << BarToMeter(DecoActual.GetCeiling()) << std::endl;
-        std::vector<GFDeco::DecoStop> Schedule = DecoActual.GetDecoSchedule();
-        for (int i = 0; i < Schedule.size(); i++) {
-            std::cout << "Deco Depth(" << i << "): " << BarToMeter(Schedule[i].Depth) << std::endl;
-            std::cout << "Deco time(" << i << "): " << Schedule[i].Time << std::endl;
-            std::cout << std::endl;
+        if(BarToMeter(DecoActual.GetCeiling()) > 0){
+            std::vector<GFDeco::DecoStop> Schedule = DecoActual.GetDecoSchedule();
+            for (int i = 0; i < Schedule.size(); i++) {
+                std::cout << "Deco Depth(" << i << "): " << BarToMeter(Schedule[i].Depth) << std::endl;
+                std::cout << "Deco time(" << i << "): " << Schedule[i].Time << std::endl;
+                std::cout << std::endl;
+            }
+        } else {
+            std::cout << "Remaining No Stop Time: " << DecoActual.GetNoDecoTime();
         }
         return 0;
     }
