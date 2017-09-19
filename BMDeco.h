@@ -21,16 +21,20 @@
 
 #include "Deco.h"
 
-class BMDeco: public Deco{
+class BMDeco : public Deco {
 public:
     /// Functions
     explicit BMDeco() = default;
-    BMDeco(const BMDeco& deco);
 
-    double GetCeiling();
-    int GetNoDecoTime();
+    BMDeco(const BMDeco &deco);
+
+    double GetCeiling() override;
+
+    int GetNoDecoTime() override;
+
     Deco::DecoStop GetNextDecoStop();
-    std::vector<DecoStop> GetDecoSchedule();
+
+    std::vector<DecoStop> GetDecoSchedule() override;
 };
 
 

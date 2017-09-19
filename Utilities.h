@@ -26,10 +26,15 @@
 #define DECOCLI_UTILITIES_H
 
 double BarToMeter(double bar);
+
 double MeterToBar(double meter);
+
 void ShowLicense();
+
 void ShowLimitedLicense();
+
 void ShowUsage(std::string executable);
-std::vector<std::string> split(const std::string &s, char delim);
+
+std::vector<std::string> split(const std::string &s, char delimiter);
 
 #endif //DECOCLI_UTILITIES_H

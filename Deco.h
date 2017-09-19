@@ -34,34 +34,39 @@ public:
 
     std::vector<gas> gases;
 
-    struct DecoStop{
+    struct DecoStop {
         double Depth;
         int Time;
+
         DecoStop(double Depth, int Time);
     };
 
     /// Public Dive parameters
     double DecentRate = 30; // Decent Rate in meters
-    double GFHigh = 0.8;    // Gradient Factor High
-    double GFLow = 0.3;     // Gradient Factor Low
     double AccentRate = -18;// Accent Rate in meters
     int CurrentGas = 0;     // Index of current gas
 
     /// Functions
     explicit Deco();
-    Deco(const Deco& deco);
+
+    Deco(const Deco &deco);
 
     void SetGasLoadings(double Pn, double Ph, int compartmentIndex);
+
     void SetPartialPressures(double depth);
+
     void SetppWv(double ppWv);
 
     virtual double GetCeiling() = 0;
+
     virtual int GetNoDecoTime() = 0;
-    virtual Deco::DecoStop GetNextDecoStop() = 0;
+
     virtual std::vector<DecoStop> GetDecoSchedule() = 0;
 
     void AddDecent(double depth, double DecentRate);
+
     void AddBottom(double time);
+
     void AddGas(double FrN2, double FrO2, double FrHe);
 
     /// Dive Parameters
@@ -73,7 +78,7 @@ public:
 
     /// gas parameters
     double ppN2;            // partial pressure Nitrogen
-    double ppHe;            // parital pressure Helium
+    double ppHe;            // partial pressure Helium
     double ppO2;            // partial pressure Oxygen
 
     /// Gas Loadings

@@ -21,7 +21,7 @@
 
 #include "Deco.h"
 
-class GFDeco: public Deco {
+class GFDeco : public Deco {
 public:
     /// Public Dive parameters
     double GFHigh = 0.8;    // Gradient Factor High
@@ -29,13 +29,19 @@ public:
 
     /// Functions
     explicit GFDeco() = default;
-    GFDeco(const GFDeco& deco);
-    double GetCeiling();
-    int GetNoDecoTime();
+
+    GFDeco(const GFDeco &deco);
+
+    double GetCeiling() override;
+
+    int GetNoDecoTime() override;
 
     Deco::DecoStop GetNextDecoStop();
-    std::vector<DecoStop> GetDecoSchedule();
+
+    std::vector<DecoStop> GetDecoSchedule() override;
+
     double GetMValue(int TissueIndex, double depth);
+
     double GetGFPoint(double depth);
 };
 

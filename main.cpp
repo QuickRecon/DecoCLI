@@ -19,23 +19,22 @@
 #include <iostream>
 #include "GFDeco.h"
 #include "BMDeco.h"
-#include <cstring>
 
 bool AutoShowLicense = true;
 bool verbose = true;
 
 int main(int argc, char *argv[]) {
 
-    Deco* DecoActual;
+    Deco *DecoActual;
 
-    if(argc == 1){
+    if (argc == 1) {
         ShowUsage(argv[0]);
         return 0;
     }
     std::string mode(argv[1]);
-    if(mode == "GF"){
+    if (mode == "GF") {
         DecoActual = new GFDeco;
-    } else if(mode == "BM"){
+    } else if (mode == "BM") {
         DecoActual = new BMDeco;
     } else {
         DecoActual = new GFDeco;
@@ -56,28 +55,28 @@ int main(int argc, char *argv[]) {
             double FrO2 = stod(parameters[0]);
             double FrN2 = stod(parameters[1]);
             double FrHe = stod(parameters[2]);
-            DecoActual->AddGas(FrO2,FrN2,FrHe);
+            DecoActual->AddGas(FrO2, FrN2, FrHe);
         } else if (argument == "--quite") {
             verbose = false;
             AutoShowLicense = false;
             return 0;
-        } else if (FirstLetter == "D"){
+        } else if (FirstLetter == "D") {
             std::string substring = argument.substr(1, argument.size());
             std::vector<std::string> parameters = split(substring, ':');
             for (const auto &parameter : parameters) {
-                std::vector<std::string> depths = split(parameter,',');
+                std::vector<std::string> depths = split(parameter, ',');
                 double depth = stod(depths[0]);
                 double time = stod(depths[1]);
                 DecoActual->AddDecent(MeterToBar(depth), MeterToBar(DecoActual->DecentRate));
                 DecoActual->AddBottom(time);
             }
-        } else if (argument == "--help"){
+        } else if (argument == "--help") {
             ShowUsage(argv[0]);
         }
     }
     if (AutoShowLicense) { ShowLimitedLicense(); };
     if (argc >= 3) {
-        if(BarToMeter(DecoActual->GetCeiling()) > 0){
+        if (BarToMeter(DecoActual->GetCeiling()) > 0) {
             std::vector<GFDeco::DecoStop> Schedule = DecoActual->GetDecoSchedule();
             for (int i = 0; i < Schedule.size(); i++) {
                 std::cout << "Deco Depth(" << i << "): " << BarToMeter(Schedule[i].Depth) << std::endl;

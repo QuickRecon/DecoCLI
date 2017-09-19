@@ -18,28 +18,28 @@
 
 #include "GFDeco.h"
 
-double GFDeco::GetCeiling(){
+double GFDeco::GetCeiling() {
     this->LimitingTissueIndex = 0;
-    for(int i = 0; i < 16; i++){
+    for (int i = 0; i < 16; i++) {
         GFDeco DecoSim = GFDeco(*this);
         double currentCeiling = 0;
         bool inLimits = false;
-        while(!inLimits){
+        while (!inLimits) {
             double Pn = DecoSim.Pn[i];
             double Ph = DecoSim.Ph[i];
             double pA = DecoSim.pA;
             double MaxGF = DecoSim.GetGFPoint(currentCeiling);
-            double TheoreticalGF = ((Pn+Ph)-pA)/(DecoSim.GetMValue(i,currentCeiling)-pA);
+            double TheoreticalGF = ((Pn + Ph) - pA) / (DecoSim.GetMValue(i, currentCeiling) - pA);
 
-            if(TheoreticalGF < MaxGF && !std::isnan(TheoreticalGF)){
+            if (TheoreticalGF < MaxGF && !std::isnan(TheoreticalGF)) {
                 inLimits = true;
-            } else{
+            } else {
                 currentCeiling += 0.1;
             }
         }
         this->TissueAccentCeiling[i] = currentCeiling;
 
-        if(this->TissueAccentCeiling[i] > this->TissueAccentCeiling[LimitingTissueIndex]){
+        if (this->TissueAccentCeiling[i] > this->TissueAccentCeiling[LimitingTissueIndex]) {
             LimitingTissueIndex = i;
         }
     }
@@ -48,7 +48,7 @@ double GFDeco::GetCeiling(){
     return ceiling;
 }
 
-double GFDeco::GetMValue(int TissueIndex, double depth){
+double GFDeco::GetMValue(int TissueIndex, double depth) {
     SetPartialPressures(depth);
     double ppN2 = this->ppN2;
     double aN2 = GFDeco::buehlmann_N2_a[TissueIndex];
@@ -58,10 +58,10 @@ double GFDeco::GetMValue(int TissueIndex, double depth){
     double aHe = GFDeco::buehlmann_He_a[TissueIndex];
     double bHe = GFDeco::buehlmann_He_b[TissueIndex];
 
-    double a = ((aN2 * ppN2) + (aHe * ppHe))/(ppN2 + ppHe);
-    double b = ((bN2 * ppN2) + (bHe * ppHe))/(ppN2 + ppHe);
+    double a = ((aN2 * ppN2) + (aHe * ppHe)) / (ppN2 + ppHe);
+    double b = ((bN2 * ppN2) + (bHe * ppHe)) / (ppN2 + ppHe);
 
-    return (depth/b) + a;
+    return (depth / b) + a;
 }
 
 double GFDeco::GetGFPoint(double depth) {
@@ -69,7 +69,7 @@ double GFDeco::GetGFPoint(double depth) {
     double GFLow = this->GFLow;
     double LowDepth = this->MaximumDepth;
 
-    return GFHigh - ((GFHigh - GFLow)/LowDepth) * depth;
+    return GFHigh - ((GFHigh - GFLow) / LowDepth) * depth;
 }
 
 GFDeco::GFDeco(const GFDeco &GFDeco) {
@@ -91,7 +91,7 @@ GFDeco::GFDeco(const GFDeco &GFDeco) {
     this->pA = GFDeco.pA;
     this->ppWv = GFDeco.ppWv;
 
-    for(int i = 0; i < 16; i++){
+    for (int i = 0; i < 16; i++) {
         this->TissueAccentCeiling[i] = GFDeco.TissueAccentCeiling[i];
         this->Pn[i] = GFDeco.Pn[i];
         this->Ph[i] = GFDeco.Ph[i];
@@ -102,7 +102,7 @@ GFDeco::GFDeco(const GFDeco &GFDeco) {
 int GFDeco::GetNoDecoTime() {
     int noStopTime = 0;
     bool inLimits = true;
-    while(inLimits){
+    while (inLimits) {
         GFDeco DecoSim = GFDeco(*this);
         DecoSim.AddBottom(noStopTime);
         inLimits = DecoSim.GetCeiling() < 1;
@@ -114,11 +114,11 @@ int GFDeco::GetNoDecoTime() {
 
 Deco::DecoStop GFDeco::GetNextDecoStop() {
     // Round Deco depth to next multiple of 3m (return as bar)
-    double StopDepth = MeterToBar(ceil(BarToMeter(GFDeco::GetCeiling())/3)*3);
+    double StopDepth = MeterToBar(ceil(BarToMeter(GFDeco::GetCeiling()) / 3) * 3);
 
     int StopTime = 0;
     bool inLimits = false;
-    while(!inLimits){
+    while (!inLimits) {
         StopTime++;
         GFDeco DecoSim = GFDeco(*this);
         DecoSim.AddDecent(StopDepth, -MeterToBar(Deco::AccentRate));
@@ -131,7 +131,7 @@ Deco::DecoStop GFDeco::GetNextDecoStop() {
 std::vector<Deco::DecoStop> GFDeco::GetDecoSchedule() {
     std::vector<Deco::DecoStop> Schedule;
     GFDeco DecoSim = GFDeco(*this);
-    while(DecoSim.GetCeiling() > 1){
+    while (DecoSim.GetCeiling() > 1) {
         Deco::DecoStop stop = DecoSim.GetNextDecoStop();
         Schedule.emplace_back(stop);
         DecoSim.AddDecent(stop.Depth, -MeterToBar(GFDeco::AccentRate));
