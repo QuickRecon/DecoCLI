@@ -71,7 +71,7 @@ BMDeco::DecoStop BMDeco::GetNextDecoStop() {
     return {StopDepth, StopTime};
 }
 
-std::vector<BMDeco::DecoStop> BMDeco::GetDecoSchedule() {
+std::vector<Deco::DecoStop> BMDeco::GetDecoSchedule() {
     std::vector<BMDeco::DecoStop> Schedule;
     BMDeco decoSim = BMDeco(*this);
     while(decoSim.GetCeiling() > 1){

@@ -29,7 +29,7 @@ public:
 
     double GetCeiling();
     int GetNoDecoTime();
-    BMDeco::DecoStop GetNextDecoStop();
+    Deco::DecoStop GetNextDecoStop();
     std::vector<DecoStop> GetDecoSchedule();
 };
 

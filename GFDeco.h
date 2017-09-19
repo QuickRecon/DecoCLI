@@ -33,7 +33,7 @@ public:
     double GetCeiling();
     int GetNoDecoTime();
 
-    GFDeco::DecoStop GetNextDecoStop();
+    Deco::DecoStop GetNextDecoStop();
     std::vector<DecoStop> GetDecoSchedule();
     double GetMValue(int TissueIndex, double depth);
     double GetGFPoint(double depth);

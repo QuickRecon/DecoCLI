@@ -55,6 +55,11 @@ public:
     void SetPartialPressures(double depth);
     void SetppWv(double ppWv);
 
+    virtual double GetCeiling() = 0;
+    virtual int GetNoDecoTime() = 0;
+    virtual Deco::DecoStop GetNextDecoStop() = 0;
+    virtual std::vector<DecoStop> GetDecoSchedule() = 0;
+
     void AddDecent(double depth, double DecentRate);
     void AddBottom(double time);
     void AddGas(double FrN2, double FrO2, double FrHe);

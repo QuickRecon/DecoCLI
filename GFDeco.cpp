@@ -128,8 +128,8 @@ Deco::DecoStop GFDeco::GetNextDecoStop() {
     return {StopDepth, StopTime};
 }
 
-std::vector<GFDeco::DecoStop> GFDeco::GetDecoSchedule() {
-    std::vector<GFDeco::DecoStop> Schedule;
+std::vector<Deco::DecoStop> GFDeco::GetDecoSchedule() {
+    std::vector<Deco::DecoStop> Schedule;
     GFDeco DecoSim = GFDeco(*this);
     while(DecoSim.GetCeiling() > 1){
         Deco::DecoStop stop = DecoSim.GetNextDecoStop();

@@ -26,9 +26,9 @@ bool verbose = true;
 
 int main(int argc, char *argv[]) {
 
-    GFDeco DecoActual; //initialise Deco Model
+    GFDeco DecoActual;
 
-    for (int i = 0; i < argc; i++) {
+    for (int i = 2; i < argc; i++) {
         std::string argument(argv[i]);
         std::string FirstLetter = argument.substr(0, 1);
         if (argument == "--ShowLicense") {
