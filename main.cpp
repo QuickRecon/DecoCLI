@@ -26,7 +26,21 @@ bool verbose = true;
 
 int main(int argc, char *argv[]) {
 
-    GFDeco DecoActual;
+    Deco* DecoActual;
+
+    if(argc == 1){
+        ShowUsage(argv[0]);
+        return 0;
+    }
+    std::string mode(argv[1]);
+    if(mode == "GF"){
+        DecoActual = new GFDeco;
+    } else if(mode == "BM"){
+        DecoActual = new BMDeco;
+    } else {
+        DecoActual = new GFDeco;
+        std::cout << "No mode given, defaulting to GF mode. Run with --help for details." << std::endl;
+    }
 
     for (int i = 2; i < argc; i++) {
         std::string argument(argv[i]);
@@ -42,7 +56,7 @@ int main(int argc, char *argv[]) {
             double FrO2 = stod(parameters[0]);
             double FrN2 = stod(parameters[1]);
             double FrHe = stod(parameters[2]);
-            DecoActual.AddGas(FrO2,FrN2,FrHe);
+            DecoActual->AddGas(FrO2,FrN2,FrHe);
         } else if (argument == "--quite") {
             verbose = false;
             AutoShowLicense = false;
@@ -54,22 +68,24 @@ int main(int argc, char *argv[]) {
                 std::vector<std::string> depths = split(parameter,',');
                 double depth = stod(depths[0]);
                 double time = stod(depths[1]);
-                DecoActual.AddDecent(MeterToBar(depth), MeterToBar(DecoActual.DecentRate));
-                DecoActual.AddBottom(time);
+                DecoActual->AddDecent(MeterToBar(depth), MeterToBar(DecoActual->DecentRate));
+                DecoActual->AddBottom(time);
             }
+        } else if (argument == "--help"){
+            ShowUsage(argv[0]);
         }
     }
     if (AutoShowLicense) { ShowLimitedLicense(); };
     if (argc >= 3) {
-        if(BarToMeter(DecoActual.GetCeiling()) > 0){
-            std::vector<GFDeco::DecoStop> Schedule = DecoActual.GetDecoSchedule();
+        if(BarToMeter(DecoActual->GetCeiling()) > 0){
+            std::vector<GFDeco::DecoStop> Schedule = DecoActual->GetDecoSchedule();
             for (int i = 0; i < Schedule.size(); i++) {
                 std::cout << "Deco Depth(" << i << "): " << BarToMeter(Schedule[i].Depth) << std::endl;
                 std::cout << "Deco time(" << i << "): " << Schedule[i].Time << std::endl;
                 std::cout << std::endl;
             }
         } else {
-            std::cout << "Remaining No Stop Time: " << DecoActual.GetNoDecoTime();
+            std::cout << "Remaining No Stop Time: " << DecoActual->GetNoDecoTime();
         }
         return 0;
     }
