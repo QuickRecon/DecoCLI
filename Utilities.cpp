@@ -73,27 +73,27 @@ void ShowLimitedLicense() {
 }
 
 void ShowUsage(const std::string executable) {
-    std::string Usage =
-            "This program is designed to perform (diving) decompression calculations.\n"
-                    "\n"
-                    "General use: " + executable + "<Mode> <General Parameters> <Dive Parameters>\n"
-                    "\n"
-                    "Modes:\n"
-                    "BM             :   Use the buehlmann decompression model.\n"
-                    "GF             :   Use the buehlmann decompression model with gradient factor support.\n"
-                    "\n"
-                    "General Parameters:\n"
-                    "--ShowLicense  :   Show the extended license prompt.\n"
-                    "--HideLicense  :   Hide the automatic license prompt.\n"
-                    "--quiet        :   Suppress unnecessary outputs.\n"
-                    "--help         :   Display this help message.\n"
-                    "\n"
-                    "Dive Parameters:\n"
-                    "G              :   Adds a gas to the gas list, takes the form of G<FrN2>:<FrO2>:<FrHe>,\n"
-                    "                   air (expressed as G0.21:0.79:0) is automatically added as the zeroth element\n"
-                    "                   and gases can be accessed in the order they are added.\n"
-                    "D              :   Add depths and times to the model, takes the form D<Depth1>,<Time1>:<Depth2>,<Time2>...\n"
-                    "                   For example a dive that goes to 10 meters for 10 minutes then goes to 60 meters for 5 minutes\n"
-                    "                   would be expressed as D10,10:60,5";
+    std::string Usage;
+    Usage = "This program is designed to perform (diving) decompression calculations.\n"
+            "\n"
+            "General use: " + executable + " <Mode> <General Parameters> <Dive Parameters>\n"
+            "\n"
+            "Modes:\n"
+            "BM             :   Use the buehlmann decompression model.\n"
+            "GF             :   Use the buehlmann decompression model with gradient factor support.\n"
+            "\n"
+            "General Parameters:\n"
+            "--ShowLicense  :   Show the extended license prompt.\n"
+            "--HideLicense  :   Hide the automatic license prompt.\n"
+            "--quiet        :   Suppress unnecessary outputs.\n"
+            "--help         :   Display this help message.\n"
+            "\n"
+            "Dive Parameters:\n"
+            "G              :   Adds a gas to the gas list, takes the form of G<FrN2>:<FrO2>:<FrHe>,\n"
+            "                   air (expressed as G0.21:0.79:0) is automatically added as the zeroth element\n"
+            "                   and gases can be accessed in the order they are added.\n"
+            "D              :   Add depths and times to the model, takes the form D<Depth1>,<Time1>:<Depth2>,<Time2>...\n"
+            "                   For example a dive that goes to 10 meters for 10 minutes then goes to 60 meters for 5 minutes\n"
+            "                   would be expressed as D10,10:60,5";
     std::cout << Usage << std::endl;
 }

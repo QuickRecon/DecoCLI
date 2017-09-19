@@ -1,6 +1,31 @@
 # DecoCLI
-command line tool for performing decompression calculations (EXPERIMENTAL!!)
+This program is designed to perform (diving) decompression calculations.
+
+General use: DecoCLI \<Mode> \<General Parameters> \<Dive Parameters>
+
+###Modes:
+BM             :   Use the buehlmann decompression model.
+
+GF             :   Use the buehlmann decompression model with gradient factor support.
+
+###General Parameters:
+--ShowLicense  :   Show the extended license prompt.
+
+--HideLicense  :   Hide the automatic license prompt.
+
+--quiet        :   Suppress unnecessary outputs.
+
+--help         :   Display this help message.
+
+###Dive Parameters:
+G              :   Adds a gas to the gas list, takes the form of G<FrN2>:<FrO2>:<FrHe>,
+                   air (expressed as G0.21:0.79:0) is automatically added as the zeroth element
+                   and gases can be accessed in the order they are added.
+
+D              :   Add depths and times to the model, takes the form D<Depth1>,<Time1>:<Depth2>,<Time2>...
+                   For example a dive that goes to 10 meters for 10 minutes then goes to 60 meters for 5 minutes
+                   would be expressed as D10,10:60,5";
 
 Buehlmann ZH-L16 Algorithm based on this website: http://www.lizardland.co.uk/DIYDeco.html
 
-# DO NOT USE THIS FOR ANY ACTUAL DIVE CALCULATIONS!
+### DO NOT USE THIS FOR ANY ACTUAL DIVE CALCULATIONS!
