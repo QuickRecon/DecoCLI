@@ -76,7 +76,7 @@ void ShowUsage(const std::string executable) {
     std::string Usage =
             "This program is designed to perform (diving) decompression calculations.\n"
                     "\n"
-                    "General use: " + executable + "<Mode> <General Parameters> <Model Parameters>\n"
+                    "General use: " + executable + "<Mode> <General Parameters> <Dive Parameters>\n"
                     "\n"
                     "Modes:\n"
                     "BM             :   Use the buehlmann decompression model.\n"
@@ -89,13 +89,11 @@ void ShowUsage(const std::string executable) {
                     "--help         :   Display this help message.\n"
                     "\n"
                     "Dive Parameters:\n"
-                    "G\n"
-                    "   Adds a gas to the gas list, takes the form of G<FrN2>:<FrO2>:<FrHe>,\n"
-                    "   air (expressed as G0.21:0.79:0) is automatically added as the zeroth element\n"
-                    "   and gases can be accessed in the order they are added.\n"
-                    "D\n"
-                    "   Add depths and times to the model, takes the form D<Depth1>,<Time1>:<Depth2>,<Time2>...\n"
-                    "   For example a dive that goes to 10 meters for 10 minutes then goes to 60 meters for 5 minutes\n"
-                    "   would be expressed as D10,10:60,5";
+                    "G              :   Adds a gas to the gas list, takes the form of G<FrN2>:<FrO2>:<FrHe>,\n"
+                    "                   air (expressed as G0.21:0.79:0) is automatically added as the zeroth element\n"
+                    "                   and gases can be accessed in the order they are added.\n"
+                    "D              :   Add depths and times to the model, takes the form D<Depth1>,<Time1>:<Depth2>,<Time2>...\n"
+                    "                   For example a dive that goes to 10 meters for 10 minutes then goes to 60 meters for 5 minutes\n"
+                    "                   would be expressed as D10,10:60,5";
     std::cout << Usage << std::endl;
 }
