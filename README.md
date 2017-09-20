@@ -22,11 +22,11 @@ GF             :   Use the buehlmann decompression model with gradient factor su
 --help         :   Display this help message.
 
 ### Dive Parameters:
-G              :   Adds a gas to the gas list, takes the form of G<FrN2>:<FrO2>:<FrHe>,
+G              :   Adds a gas to the gas list, takes the form of G\<FrN2>:\<FrO2>:\<FrHe>,
                    air (expressed as G0.21:0.79:0) is automatically added as the zeroth element
                    and gases can be accessed in the order they are added.
 
-D              :   Add depths and times to the model, takes the form D<Depth1>,<Time1>:<Depth2>,<Time2>...
+D              :   Add depths and times to the model, takes the form D\<Depth1>,\<Time1>:\<Depth2>,\<Time2>...
                    For example a dive that goes to 10 meters for 10 minutes then goes to 60 meters for 5 minutes
                    would be expressed as D10,10:60,5
 
