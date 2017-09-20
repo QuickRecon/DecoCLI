@@ -10,7 +10,7 @@ General use: DecoCLI \<Mode> \<General Parameters> \<Dive Parameters>
 ### Modes:
 BM             :   Use the buehlmann decompression model.
 
-GF             :   Use the buehlmann decompression model with gradient factor support.
+GF             :   Use the buehlmann decompression model with gradient factor support. (default is 30,80)
 
 ### General Parameters:
 --ShowLicense  :   Show the extended license prompt.
@@ -36,7 +36,7 @@ D              :   Add depths and times to the model, takes the form D<Depth1>,<
 - [x] Implement Gradient Factors in Deco Model
 - [ ] Implement VPM Deco Model
 - [x] Implement basic command line interface.
-- [ ] Implement custom GF values
+- [x] Implement custom GF values
 - [ ] Allow for gas switching
 - [ ] Check models for accuracy against a known good program
 

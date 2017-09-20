@@ -22,6 +22,7 @@
 
 bool AutoShowLicense = true;
 bool verbose = true;
+bool overrideGF = false;
 
 int main(int argc, char *argv[]) {
 
@@ -72,9 +73,28 @@ int main(int argc, char *argv[]) {
             }
         } else if (argument == "--help") {
             ShowUsage(argv[0]);
+        } else if (argument == "--GFLow") {
+            if (mode == "GF") {
+                std::string GFLow = argv[i + 1];
+                DecoActual->GFLow = stod(GFLow);
+                overrideGF = true;
+            } else {
+                std::cout << "Cannot set gradient factors if not in a mode that supports gradient factors" << std::endl;
+            }
+        } else if (argument == "--GFHigh") {
+            if (mode == "GF") {
+                std::string GFHigh = argv[i + 1];
+                DecoActual->GFHigh = stod(GFHigh);
+                overrideGF = true;
+            } else {
+                std::cout << "Cannot set gradient factors if not in a mode that supports gradient factors" << std::endl;
+            }
         }
     }
     if (AutoShowLicense) { ShowLimitedLicense(); };
+
+    if (!overrideGF) { std::cout << "GRADIENT FACTORS NOT SET, USING 30,80 BY DEFAULT.\n" << std::endl; }
+
     if (argc >= 3) {
         if (BarToMeter(DecoActual->GetCeiling()) > 0) {
             std::vector<GFDeco::DecoStop> Schedule = DecoActual->GetDecoSchedule();

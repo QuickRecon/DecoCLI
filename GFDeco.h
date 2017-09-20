@@ -23,10 +23,6 @@
 
 class GFDeco : public Deco {
 public:
-    /// Public Dive parameters
-    double GFHigh = 0.8;    // Gradient Factor High
-    double GFLow = 0.3;     // Gradient Factor Low
-
     /// Functions
     explicit GFDeco() = default;
 

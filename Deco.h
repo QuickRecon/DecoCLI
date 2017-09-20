@@ -75,6 +75,8 @@ public:
     double TissueAccentCeiling[16]; //In Bar
     double AccentCeiling;   // In meters
     int LimitingTissueIndex;
+    double GFHigh = 0.8;    // Gradient Factor High
+    double GFLow = 0.3;     // Gradient Factor Low
 
     /// gas parameters
     double ppN2;            // partial pressure Nitrogen

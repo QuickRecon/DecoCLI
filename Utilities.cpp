@@ -80,7 +80,7 @@ void ShowUsage(const std::string executable) {
             "\n"
             "Modes:\n"
             "BM             :   Use the buehlmann decompression model.\n"
-            "GF             :   Use the buehlmann decompression model with gradient factor support.\n"
+            "GF             :   Use the buehlmann decompression model with gradient factor support. (default is 30,80)\n"
             "\n"
             "General Parameters:\n"
             "--ShowLicense  :   Show the extended license prompt.\n"
