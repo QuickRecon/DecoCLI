@@ -1,4 +1,8 @@
 # DecoCLI
+### DO NOT USE THIS FOR ANY ACTUAL DIVE CALCULATIONS!
+
+## Usage
+
 This program is designed to perform (diving) decompression calculations.
 
 General use: DecoCLI \<Mode> \<General Parameters> \<Dive Parameters>
@@ -24,8 +28,22 @@ G              :   Adds a gas to the gas list, takes the form of G<FrN2>:<FrO2>:
 
 D              :   Add depths and times to the model, takes the form D<Depth1>,<Time1>:<Depth2>,<Time2>...
                    For example a dive that goes to 10 meters for 10 minutes then goes to 60 meters for 5 minutes
-                   would be expressed as D10,10:60,5";
+                   would be expressed as D10,10:60,5
 
-Buehlmann ZH-L16 Algorithm based on this website: http://www.lizardland.co.uk/DIYDeco.html
+## Development
+### TODO
+- [x] Implement Buehlmann decompression model
+- [x] Implement Gradient Factors in Deco Model
+- [ ] Implement VPM Deco Model
+- [x] Implement basic command line interface.
+- [ ] Implement custom GF values
+- [ ] Allow for gas switching
+- [ ] Check models for accuracy against a known good program
 
-### DO NOT USE THIS FOR ANY ACTUAL DIVE CALCULATIONS!
+## Sources
+
+http://www.lizardland.co.uk/DIYDeco.html
+
+http://www.ddplan.com/reference/mvalues.pdf
+
+http://www.rebreatherworld.com/showthread.php?5037-Gradient-Factors-for-Dummies
