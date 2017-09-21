@@ -176,3 +176,46 @@ void Deco::SetppWv(double ppWv) {
 void Deco::AddGas(double FrN2, double FrO2, double FrHe) {
     gases.emplace_back(Deco::gas(FrN2, FrO2, FrHe));
 }
+
+long Deco::GetNoDecoTime() {
+    long noStopTime = 0;
+    bool inLimits = true;
+    while (inLimits) {
+        auto DecoSim = Deco(*this);
+        DecoSim.AddBottom(noStopTime);
+        inLimits = DecoSim.GetCeiling() < 1;
+        noStopTime++;
+        if(noStopTime > 999){
+            return 999;
+        }
+    }
+    noStopTime -= 1;
+    return noStopTime;
+}
+
+Deco::DecoStop Deco::GetNextDecoStop() {
+    // Round Deco depth to next multiple of 3m (return as bar)
+    double StopDepth = MeterToBar(ceil(BarToMeter(Deco::GetCeiling()) / 3) * 3);
+    int StopTime = 0;
+    bool inLimits = false;
+    while (!inLimits) {
+        StopTime++;
+        auto DecoSim = Deco(*this);
+        DecoSim.AddDecent(StopDepth, -MeterToBar(Deco::AccentRate));
+        DecoSim.AddBottom(StopTime);
+        inLimits = DecoSim.GetCeiling() < StopDepth - 0.3;
+    }
+    return {StopDepth, StopTime};
+}
+
+std::vector<Deco::DecoStop> Deco::GetDecoSchedule() {
+    std::vector<Deco::DecoStop> Schedule;
+    auto DecoSim = Deco(*this);
+    while (DecoSim.GetCeiling() > 1) {
+        Deco::DecoStop stop = DecoSim.GetNextDecoStop();
+        Schedule.emplace_back(stop);
+        DecoSim.AddDecent(stop.Depth, -MeterToBar(Deco::AccentRate));
+        DecoSim.AddBottom(stop.Time);
+    }
+    return Schedule;
+}

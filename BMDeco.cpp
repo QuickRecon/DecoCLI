@@ -43,47 +43,6 @@ double BMDeco::GetCeiling() {
     return ceiling;
 }
 
-int BMDeco::GetNoDecoTime() {
-    int noStopTime = 0;
-    bool inLimits = true;
-    while (inLimits) {
-        BMDeco decoSim = BMDeco(*this);
-        decoSim.AddBottom(noStopTime);
-        inLimits = decoSim.GetCeiling() < 1;
-        noStopTime++;
-    }
-    noStopTime -= 1;
-    return noStopTime;
-}
-
-BMDeco::DecoStop BMDeco::GetNextDecoStop() {
-    // Round deco depth to next multiple of 3m (return as bar)
-    double StopDepth = MeterToBar(ceil(BarToMeter(BMDeco::GetCeiling()) / 3) * 3);
-
-    int StopTime = 0;
-    bool inLimits = false;
-    while (!inLimits) {
-        BMDeco decoSim = BMDeco(*this);
-        decoSim.AddDecent(StopDepth, -MeterToBar(BMDeco::AccentRate));
-        decoSim.AddBottom(StopTime);
-        inLimits = decoSim.GetCeiling() < StopDepth - 0.3;
-        StopTime++;
-    }
-    return {StopDepth, StopTime};
-}
-
-std::vector<Deco::DecoStop> BMDeco::GetDecoSchedule() {
-    std::vector<BMDeco::DecoStop> Schedule;
-    BMDeco decoSim = BMDeco(*this);
-    while (decoSim.GetCeiling() > 1) {
-        BMDeco::DecoStop stop = decoSim.GetNextDecoStop();
-        Schedule.emplace_back(stop);
-        decoSim.AddDecent(stop.Depth, -MeterToBar(BMDeco::AccentRate));
-        decoSim.AddBottom(stop.Time);
-    }
-    return Schedule;
-}
-
 BMDeco::BMDeco(const BMDeco &deco) {
 
     this->gases = deco.gases;

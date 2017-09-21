@@ -30,12 +30,6 @@ public:
 
     double GetCeiling() override;
 
-    int GetNoDecoTime() override;
-
-    Deco::DecoStop GetNextDecoStop();
-
-    std::vector<DecoStop> GetDecoSchedule() override;
-
     double GetMValue(int TissueIndex, double depth);
 
     double GetGFPoint(double depth);

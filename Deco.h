@@ -59,9 +59,11 @@ public:
 
     virtual double GetCeiling() = 0;
 
-    virtual int GetNoDecoTime() = 0;
+    long GetNoDecoTime();
 
-    virtual std::vector<DecoStop> GetDecoSchedule() = 0;
+    Deco::DecoStop GetNextDecoStop();
+
+    std::vector<DecoStop> GetDecoSchedule();
 
     void AddDecent(double depth, double DecentRate);
 

@@ -29,12 +29,6 @@ public:
     BMDeco(const BMDeco &deco);
 
     double GetCeiling() override;
-
-    int GetNoDecoTime() override;
-
-    Deco::DecoStop GetNextDecoStop();
-
-    std::vector<DecoStop> GetDecoSchedule() override;
 };
 
 
