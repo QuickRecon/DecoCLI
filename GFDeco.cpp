@@ -99,14 +99,15 @@ GFDeco::GFDeco(const GFDeco &GFDeco) {
     }
 }
 
-int GFDeco::GetNoDecoTime() {
-    int noStopTime = 0;
+long GFDeco::GetNoDecoTime() {
+    long noStopTime = 0;
     bool inLimits = true;
     while (inLimits) {
         GFDeco DecoSim = GFDeco(*this);
         DecoSim.AddBottom(noStopTime);
         inLimits = DecoSim.GetCeiling() < 1;
         noStopTime++;
+        if(noStopTime > 999){return 999;}
     }
     noStopTime -= 1;
     return noStopTime;

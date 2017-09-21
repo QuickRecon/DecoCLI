@@ -59,7 +59,7 @@ public:
 
     virtual double GetCeiling() = 0;
 
-    virtual int GetNoDecoTime() = 0;
+    virtual long GetNoDecoTime() = 0;
 
     virtual std::vector<DecoStop> GetDecoSchedule() = 0;
 

@@ -30,7 +30,7 @@ public:
 
     double GetCeiling() override;
 
-    int GetNoDecoTime() override;
+    long GetNoDecoTime() override;
 
     Deco::DecoStop GetNextDecoStop();
 

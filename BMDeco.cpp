@@ -43,14 +43,15 @@ double BMDeco::GetCeiling() {
     return ceiling;
 }
 
-int BMDeco::GetNoDecoTime() {
-    int noStopTime = 0;
+long BMDeco::GetNoDecoTime() {
+    long noStopTime = 0;
     bool inLimits = true;
     while (inLimits) {
         BMDeco decoSim = BMDeco(*this);
         decoSim.AddBottom(noStopTime);
         inLimits = decoSim.GetCeiling() < 1;
         noStopTime++;
+        if(noStopTime > 999){return 999;}
     }
     noStopTime -= 1;
     return noStopTime;
