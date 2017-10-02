@@ -1,4 +1,4 @@
-//  Program for calculating decompression stops and no stop times using buehlmann and buehlmann derived algorithms
+//  Program for calculating decompression stops and no stop times using buhlmann and buhlmann derived algorithms
 //  Copyright (C) 2017 Aren Leishman
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -93,13 +93,13 @@ public:
     double ppWv = 0;            // Partial pressure water vapor
 
     /// Compartment Tables (Taken from Subsurface Deco.c)
-    static const double buehlmann_N2_a[];
-    static const double buehlmann_N2_b[];
-    static const double buehlmann_N2_halflife[];
+    static const double buhlmann_N2_a[];
+    static const double buhlmann_N2_b[];
+    static const double buhlmann_N2_halflife[];
 
-    static const double buehlmann_He_a[];
-    static const double buehlmann_He_b[];
-    static const double buehlmann_He_halflife[];
+    static const double buhlmann_He_a[];
+    static const double buhlmann_He_b[];
+    static const double buhlmann_He_halflife[];
 };
 
 

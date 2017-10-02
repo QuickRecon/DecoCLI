@@ -1,4 +1,4 @@
-//  Program for calculating decompression stops and no stop times using buehlmann and buehlmann derived algorithms
+//  Program for calculating decompression stops and no stop times using buhlmann and buhlmann derived algorithms
 //  Copyright (C) 2017 Aren Leishman
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -51,12 +51,12 @@ double GFDeco::GetCeiling() {
 double GFDeco::GetMValue(int TissueIndex, double depth) {
     SetPartialPressures(depth);
     double ppN2 = this->ppN2;
-    double aN2 = GFDeco::buehlmann_N2_a[TissueIndex];
-    double bN2 = GFDeco::buehlmann_N2_b[TissueIndex];
+    double aN2 = GFDeco::buhlmann_N2_a[TissueIndex];
+    double bN2 = GFDeco::buhlmann_N2_b[TissueIndex];
 
     double ppHe = this->ppHe;
-    double aHe = GFDeco::buehlmann_He_a[TissueIndex];
-    double bHe = GFDeco::buehlmann_He_b[TissueIndex];
+    double aHe = GFDeco::buhlmann_He_a[TissueIndex];
+    double bHe = GFDeco::buhlmann_He_b[TissueIndex];
 
     double a = ((aN2 * ppN2) + (aHe * ppHe)) / (ppN2 + ppHe);
     double b = ((bN2 * ppN2) + (bHe * ppHe)) / (ppN2 + ppHe);

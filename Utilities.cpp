@@ -1,4 +1,4 @@
-//  Program for calculating decompression stops and no stop times using buehlmann and buehlmann derived algorithms
+//  Program for calculating decompression stops and no stop times using buhlmann and buhlmann derived algorithms
 //  Copyright (C) 2017 Aren Leishman
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -44,7 +44,7 @@ std::vector<std::string> split(const std::string &s, char delimiter) {
 
 void ShowLicense() {
     std::string License =
-            "Program for calculating decompression stops and no stop times using buehlmann and buehlmann derived algorithms\n\n"
+            "Program for calculating decompression stops and no stop times using buhlmann and buhlmann derived algorithms\n\n"
                     "Copyright (C) 2017 Aren Leishman\n"
                     "\n"
                     "This program is free software; you can redistribute it and/or modify\n"
@@ -79,8 +79,8 @@ void ShowUsage(const std::string executable) {
             "General use: " + executable + " <Mode> <General Parameters> <Dive Parameters>\n"
             "\n"
             "Modes:\n"
-            "BM             :   Use the buehlmann decompression model.\n"
-            "GF             :   Use the buehlmann decompression model with gradient factor support. (default is 30,80)\n"
+            "BM             :   Use the buhlmann decompression model.\n"
+            "GF             :   Use the buhlmann decompression model with gradient factor support. (default is 30,80)\n"
             "\n"
             "General Parameters:\n"
             "--ShowLicense  :   Show the extended license prompt.\n"

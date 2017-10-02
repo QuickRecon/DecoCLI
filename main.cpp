@@ -1,4 +1,4 @@
-//  Program for calculating decompression stops and no stop times using buehlmann and buehlmann derived algorithms
+//  Program for calculating decompression stops and no stop times using buhlmann and buhlmann derived algorithms
 //  Copyright (C) 2017 Aren Leishman
 //
 //  This program is free software: you can redistribute it and/or modify

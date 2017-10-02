@@ -8,9 +8,9 @@ This program is designed to perform (diving) decompression calculations.
 General use: DecoCLI \<Mode> \<General Parameters> \<Dive Parameters>
 
 ### Modes:
-BM             :   Use the buehlmann decompression model.
+BM             :   Use the buhlmann decompression model.
 
-GF             :   Use the buehlmann decompression model with gradient factor support. (default is 30,80)
+GF             :   Use the buhlmann decompression model with gradient factor support. (default is 30,80)
 
 ### General Parameters:
 --ShowLicense  :   Show the extended license prompt.
@@ -32,7 +32,7 @@ D              :   Add depths and times to the model, takes the form D\<Depth1>,
 
 ## Development
 ### TODO
-- [x] Implement Buehlmann decompression model
+- [x] Implement buhlmann decompression model
 - [x] Implement Gradient Factors in Deco Model
 - [ ] Implement VPM Deco Model
 - [x] Implement basic command line interface.

@@ -1,4 +1,4 @@
-//  Program for calculating decompression stops and no stop times using buehlmann and buehlmann derived algorithms
+//  Program for calculating decompression stops and no stop times using buhlmann and buhlmann derived algorithms
 //  Copyright (C) 2017 Aren Leishman
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -22,12 +22,12 @@ double BMDeco::GetCeiling() {
     this->LimitingTissueIndex = 0;
     for (int i = 0; i < 16; i++) {
         double Pn = this->Pn[i];
-        double aN2 = BMDeco::buehlmann_N2_a[i];
-        double bN2 = BMDeco::buehlmann_N2_b[i];
+        double aN2 = BMDeco::buhlmann_N2_a[i];
+        double bN2 = BMDeco::buhlmann_N2_b[i];
 
         double Ph = this->Ph[i];
-        double aHe = BMDeco::buehlmann_He_a[i];
-        double bHe = BMDeco::buehlmann_He_b[i];
+        double aHe = BMDeco::buhlmann_He_a[i];
+        double bHe = BMDeco::buhlmann_He_b[i];
 
         double a = ((aN2 * Pn) + (aHe * Ph)) / (Pn + Ph);
         double b = ((bN2 * Pn) + (bHe * Ph)) / (Pn + Ph);
