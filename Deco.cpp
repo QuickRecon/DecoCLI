@@ -50,6 +50,12 @@ Deco::DecoStop::DecoStop(double Depth, double Time, int Gas) {
     this->Gas = Gas;
 }
 
+Deco::DecoStop::DecoStop() {
+    Depth = 0;
+    Time = 0;
+    Gas = 0;
+}
+
 void Deco::SetPartialPressures(double depth) {
     this->pA = depth;
     this->ppN2 = gases[CurrentGas].FrN2 * (this->pA - this->ppWv);
@@ -248,9 +254,13 @@ double Deco::GetNoDecoTime() {
 }
 
 Deco::DecoStop Deco::GetNextDecoStop() {
+    return GetNextDecoStop(0.0);
+}
+
+Deco::DecoStop Deco::GetNextDecoStop(double startTime) {
     // Round deco depth to next multiple of 3m (return as bar)
     double StopDepth = MeterToBar(ceil(BarToMeter(Deco::GetCeiling()) / 3) * 3);
-    double StopTime = 0;
+    double StopTime = startTime;
     bool inLimits = false;
     int gas;
     while (!inLimits) {
@@ -272,7 +282,15 @@ std::vector<Deco::DecoStop> Deco::GetDecoSchedule() {
     this->FirstStopDepth = GetCeiling();
     auto* decoSim = new Deco(*this);
     while (decoSim->GetCeiling() > 1.031) {
-        Deco::DecoStop stop = decoSim->GetNextDecoStop();
+        Deco::DecoStop stop;
+        if (!Schedule.empty() && Schedule.back().Gas == BestGas(Schedule.back().Depth-3, 1.62) )
+        {
+            stop = decoSim->GetNextDecoStop(Schedule.back().Time);
+        }
+        else
+        {
+            stop = decoSim->GetNextDecoStop();
+        }
         Schedule.emplace_back(stop);
         decoSim->SwitchGas(stop.Gas);
         decoSim->AddDecent(stop.Depth, MeterToBar(Deco::AccentRate));

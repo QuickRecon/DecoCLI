@@ -35,6 +35,8 @@ public:
     std::vector<gas> gases;
 
     struct DecoStop {
+        DecoStop();
+
         double Depth;
         double Time;
         int Gas;
@@ -111,6 +113,8 @@ public:
     void SwitchGas(int gasIndex);
 
     int BestGas(double depth, double threshold);
+
+    DecoStop GetNextDecoStop(double startTime);
 };
 
 
