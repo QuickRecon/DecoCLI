@@ -25,12 +25,13 @@ class GFDeco : public Deco {
 public:
     /// Functions
     GFDeco();
+    ~GFDeco();
 
     GFDeco(const GFDeco &deco);
 
     double GetCeiling() override;
 
-    long GetNoDecoTime() override;
+    double GetNoDecoTime() override;
 
     Deco::DecoStop GetNextDecoStop();
 

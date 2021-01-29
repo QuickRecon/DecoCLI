@@ -98,14 +98,15 @@ GFDeco::GFDeco(const GFDeco &GFDeco) {
     }
 }
 
-long GFDeco::GetNoDecoTime() {
-    long noStopTime = 0;
+double GFDeco::GetNoDecoTime() {
+    double noStopTime = 0;
     bool inLimits = true;
     while (inLimits) {
-        GFDeco DecoSim = GFDeco(*this);
-        DecoSim.AddBottom(noStopTime);
-        inLimits = DecoSim.GetCeiling() < 1;
+        auto* DecoSim = new GFDeco(*this);
+        DecoSim->AddBottom(noStopTime);
+        inLimits = DecoSim->GetCeiling() < 1;
         noStopTime++;
+        delete DecoSim;
         if(noStopTime > 999){return 999;}
     }
     noStopTime -= 1;
@@ -120,13 +121,14 @@ GFDeco::DecoStop GFDeco::GetNextDecoStop() {
     int gas;
     while (!inLimits) {
         StopTime += 1;
-        GFDeco decoSim = GFDeco(*this);
+        auto* decoSim = new GFDeco(*this);
         gas = BestGas(StopDepth, 1.62);
-        decoSim.SwitchGas(gas);
-        decoSim.AddDecent(StopDepth, MeterToBar(GFDeco::AccentRate));
-        decoSim.AddBottom(StopTime);
-        decoSim.GetCeiling();
-        inLimits = decoSim.GetCeiling() < StopDepth-(MeterToBar(3)-1.0);
+        decoSim->SwitchGas(gas);
+        decoSim->AddDecent(StopDepth, MeterToBar(GFDeco::AccentRate));
+        decoSim->AddBottom(StopTime);
+        decoSim->GetCeiling();
+        inLimits = decoSim->GetCeiling() < StopDepth-(MeterToBar(3)-1.0);
+        delete decoSim;
     }
     return {StopDepth, StopTime ,gas};
 }
@@ -134,13 +136,19 @@ GFDeco::DecoStop GFDeco::GetNextDecoStop() {
 std::vector<Deco::DecoStop> GFDeco::GetDecoSchedule() {
     std::vector<GFDeco::DecoStop> Schedule;
     this->FirstStopDepth = GetCeiling();
-    GFDeco decoSim = GFDeco(*this);
-    while (decoSim.GetCeiling() > 1.031) {
-        GFDeco::DecoStop stop = decoSim.GetNextDecoStop();
+    auto* decoSim = new GFDeco(*this);
+    while (decoSim->GetCeiling() > 1.031) {
+        GFDeco::DecoStop stop = decoSim->GetNextDecoStop();
         Schedule.emplace_back(stop);
-        decoSim.SwitchGas(stop.Gas);
-        decoSim.AddDecent(stop.Depth, MeterToBar(GFDeco::AccentRate));
-        decoSim.AddBottom(stop.Time);
+        decoSim->SwitchGas(stop.Gas);
+        decoSim->AddDecent(stop.Depth, MeterToBar(GFDeco::AccentRate));
+        decoSim->AddBottom(stop.Time);
     }
+    delete decoSim;
     return Schedule;
 }
+
+GFDeco::~GFDeco() {
+    gases.clear();
+}
+

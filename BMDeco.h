@@ -25,12 +25,13 @@ class BMDeco : public Deco {
 public:
     /// Functions
     BMDeco();
+    ~BMDeco();
 
     BMDeco(const BMDeco &deco);
 
     double GetCeiling() override;
 
-    long GetNoDecoTime() override;
+    double GetNoDecoTime() override;
 
     Deco::DecoStop GetNextDecoStop();
 

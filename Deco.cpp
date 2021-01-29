@@ -177,3 +177,7 @@ int Deco::BestGas(double depth, double threshold) {
     }
     return bestGas;
 }
+
+Deco::~Deco() {
+    gases.clear();
+}

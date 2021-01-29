@@ -48,6 +48,7 @@ public:
 
     /// Functions
     explicit Deco();
+    ~Deco();
 
     Deco(const Deco &deco);
 
@@ -59,7 +60,7 @@ public:
 
     virtual double GetCeiling() = 0;
 
-    virtual long GetNoDecoTime() = 0;
+    virtual double GetNoDecoTime() = 0;
 
     virtual std::vector<DecoStop> GetDecoSchedule() = 0;
 
