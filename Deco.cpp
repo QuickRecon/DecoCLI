@@ -122,10 +122,11 @@ Deco::Deco() {
     for (int i = 0; i < 16; i++) {
         this->SetGasLoadings(this->ppN2, 0, i);
     }
+    FirstStopDepth = -1;
 }
 
 Deco::Deco(const Deco &Deco) {
-
+    FirstStopDepth = Deco.FirstStopDepth;
     this->gases = Deco.gases;
     this->Depth = Deco.Depth;
     this->MaximumDepth = Deco.MaximumDepth;
@@ -180,4 +181,103 @@ int Deco::BestGas(double depth, double threshold) {
 
 Deco::~Deco() {
     gases.clear();
+}
+
+double Deco::GetCeiling() {
+    this->LimitingTissueIndex = 0;
+    for (int i = 0; i < 16; i++) {
+        double Pn = this->Pn[i];
+        double aN2 = Deco::buhlmann_N2_a[i];
+        double bN2 = Deco::buhlmann_N2_b[i];
+
+        double Ph = this->Ph[i];
+        double aHe = Deco::buhlmann_He_a[i];
+        double bHe = Deco::buhlmann_He_b[i];
+
+        double a = ((aN2 * Pn) + (aHe * Ph)) / (Pn + Ph);
+        double b = ((bN2 * Pn) + (bHe * Ph)) / (Pn + Ph);
+
+        double gf = GetGFPoint(Depth);
+        this->TissueAccentCeiling[i] = ((Pn + Ph) - (a * gf)) / (gf / b + 1.0 - gf);
+
+        if (this->TissueAccentCeiling[i] > this->TissueAccentCeiling[LimitingTissueIndex]) {
+            LimitingTissueIndex = i;
+        }
+    }
+    double ceiling = this->TissueAccentCeiling[LimitingTissueIndex];
+    this->AccentCeiling = ceiling;
+    return ceiling;
+}
+
+double Deco::GetGFPoint(double depth) {
+    double GFHigh = this->GFHigh;
+    double GFLow = this->GFLow;
+    double LowDepth = this->FirstStopDepth;
+
+    if (FirstStopDepth == -1) {
+        return GFLow;
+    }
+    else {
+        if(depth < LowDepth) {
+            double GF = GFHigh + ((GFHigh - GFLow) / (0.0 - BarToMeter(LowDepth))) * (BarToMeter(depth));
+            return GF;
+        }
+        else if (depth <= 1)
+        {
+            return GFHigh;
+        }
+        else {
+            return GFLow;
+        }
+    }
+}
+
+double Deco::GetNoDecoTime() {
+    double noStopTime = 0;
+    bool inLimits = true;
+    while (inLimits) {
+        auto* DecoSim = new Deco(*this);
+        DecoSim->AddBottom(noStopTime);
+        inLimits = DecoSim->GetCeiling() < 1;
+        noStopTime++;
+        delete DecoSim;
+        if(noStopTime > 999){return 999;}
+    }
+    noStopTime -= 1;
+    return noStopTime;
+}
+
+Deco::DecoStop Deco::GetNextDecoStop() {
+    // Round deco depth to next multiple of 3m (return as bar)
+    double StopDepth = MeterToBar(ceil(BarToMeter(Deco::GetCeiling()) / 3) * 3);
+    double StopTime = 0;
+    bool inLimits = false;
+    int gas;
+    while (!inLimits) {
+        StopTime += 1;
+        auto* decoSim = new Deco(*this);
+        gas = BestGas(StopDepth, 1.62);
+        decoSim->SwitchGas(gas);
+        decoSim->AddDecent(StopDepth, MeterToBar(Deco::AccentRate));
+        decoSim->AddBottom(StopTime);
+        decoSim->GetCeiling();
+        inLimits = decoSim->GetCeiling() < StopDepth-(MeterToBar(3)-1.0);
+        delete decoSim;
+    }
+    return {StopDepth, StopTime ,gas};
+}
+
+std::vector<Deco::DecoStop> Deco::GetDecoSchedule() {
+    std::vector<Deco::DecoStop> Schedule;
+    this->FirstStopDepth = GetCeiling();
+    auto* decoSim = new Deco(*this);
+    while (decoSim->GetCeiling() > 1.031) {
+        Deco::DecoStop stop = decoSim->GetNextDecoStop();
+        Schedule.emplace_back(stop);
+        decoSim->SwitchGas(stop.Gas);
+        decoSim->AddDecent(stop.Depth, MeterToBar(Deco::AccentRate));
+        decoSim->AddBottom(stop.Time);
+    }
+    delete decoSim;
+    return Schedule;
 }

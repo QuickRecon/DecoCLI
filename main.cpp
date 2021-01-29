@@ -17,30 +17,20 @@
 
 //
 #include <iostream>
-#include "GFDeco.h"
-#include "BMDeco.h"
-
+#include "Deco.h"
 bool AutoShowLicense = true;
 bool verbose = true;
 bool overrideGF = false;
 
 int main(int argc, char *argv[]) {
 
-    Deco *DecoActual;
+    Deco *DecoActual = new Deco();
 
     if (argc == 1) {
         ShowUsage(argv[0]);
         return 0;
     }
     std::string mode(argv[1]);
-    if (mode == "GF") {
-        DecoActual = new GFDeco;
-    } else if (mode == "BM") {
-        DecoActual = new BMDeco;
-    } else {
-        DecoActual = new GFDeco;
-        std::cout << "No mode given, defaulting to GF mode. Run with --help for details." << std::endl;
-    }
 
     for (int i = 2; i < argc; i++) {
         std::string argument(argv[i]);
@@ -97,7 +87,7 @@ int main(int argc, char *argv[]) {
 
     if (argc >= 3) {
         if (BarToMeter(DecoActual->GetCeiling()) > 0) {
-            std::vector<GFDeco::DecoStop> Schedule = DecoActual->GetDecoSchedule();
+            std::vector<Deco::DecoStop> Schedule = DecoActual->GetDecoSchedule();
             for (int i = 0; i < Schedule.size(); i++) {
                 std::cout << "Deco Depth(" << i << "): " << BarToMeter(Schedule[i].Depth) << std::endl;
                 std::cout << "Deco time(" << i << "): " << Schedule[i].Time << std::endl;

@@ -58,17 +58,23 @@ public:
 
     void SetppWv(double ppwv);
 
-    virtual double GetCeiling() = 0;
+    double GetCeiling();
 
-    virtual double GetNoDecoTime() = 0;
+    virtual double GetNoDecoTime();
 
-    virtual std::vector<DecoStop> GetDecoSchedule() = 0;
+    std::vector<DecoStop> GetDecoSchedule();
 
     void AddDecent(double depth, double decentRate);
 
     void AddBottom(double time);
 
     void AddGas(double FrN2, double FrO2, double FrHe);
+
+    Deco::DecoStop GetNextDecoStop();
+
+    double GetGFPoint(double depth);
+
+    double FirstStopDepth;
 
     /// Dive Parameters
     double Depth = 1;
