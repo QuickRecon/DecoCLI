@@ -33,7 +33,6 @@ double GFDeco::GetCeiling() {
         double b = ((bN2 * Pn) + (bHe * Ph)) / (Pn + Ph);
 
         double gf = GetGFPoint(Depth);
-        std::cout << gf << std::endl;
         this->TissueAccentCeiling[i] = ((Pn + Ph) - (a * gf)) / (gf / b + 1.0 - gf);
 
         if (this->TissueAccentCeiling[i] > this->TissueAccentCeiling[LimitingTissueIndex]) {
