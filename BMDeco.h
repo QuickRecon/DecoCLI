@@ -24,7 +24,7 @@
 class BMDeco : public Deco {
 public:
     /// Functions
-    explicit BMDeco() = default;
+    BMDeco();
 
     BMDeco(const BMDeco &deco);
 

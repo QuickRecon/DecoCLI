@@ -24,7 +24,7 @@
 class GFDeco : public Deco {
 public:
     /// Functions
-    explicit GFDeco() = default;
+    GFDeco();
 
     GFDeco(const GFDeco &deco);
 
@@ -36,9 +36,9 @@ public:
 
     std::vector<DecoStop> GetDecoSchedule() override;
 
-    double GetMValue(int TissueIndex, double depth);
-
     double GetGFPoint(double depth);
+
+    double FirstStopDepth;
 };
 
 #endif //DECOCLI_GFDECO_H

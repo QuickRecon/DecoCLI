@@ -36,9 +36,9 @@ public:
 
     struct DecoStop {
         double Depth;
-        int Time;
-
-        DecoStop(double Depth, int Time);
+        double Time;
+        int Gas;
+        DecoStop(double Depth, double Time, int gas);
     };
 
     /// Public Dive parameters
@@ -51,11 +51,11 @@ public:
 
     Deco(const Deco &deco);
 
-    void SetGasLoadings(double Pn, double Ph, int compartmentIndex);
+    void SetGasLoadings(double pn, double ph, int compartmentIndex);
 
     void SetPartialPressures(double depth);
 
-    void SetppWv(double ppWv);
+    void SetppWv(double ppwv);
 
     virtual double GetCeiling() = 0;
 
@@ -63,7 +63,7 @@ public:
 
     virtual std::vector<DecoStop> GetDecoSchedule() = 0;
 
-    void AddDecent(double depth, double DecentRate);
+    void AddDecent(double depth, double decentRate);
 
     void AddBottom(double time);
 
@@ -75,8 +75,8 @@ public:
     double TissueAccentCeiling[16]; //In Bar
     double AccentCeiling;   // In meters
     int LimitingTissueIndex;
-    double GFHigh = 0.8;    // Gradient Factor High
-    double GFLow = 0.3;     // Gradient Factor Low
+    double GFHigh = 0.7;    // Gradient Factor High
+    double GFLow = 0.4;     // Gradient Factor Low
 
     /// gas parameters
     double ppN2;            // partial pressure Nitrogen
@@ -100,6 +100,10 @@ public:
     static const double buhlmann_He_a[];
     static const double buhlmann_He_b[];
     static const double buhlmann_He_halflife[];
+
+    void SwitchGas(int gasIndex);
+
+    int BestGas(double depth, double threshold);
 };
 
 

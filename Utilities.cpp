@@ -18,11 +18,19 @@
 #include "Utilities.h"
 
 double BarToMeter(double bar) {
-    return 10 * (bar - 1);
+    if(bar < 0)
+    {
+        return -BarToMeter(-bar);
+    }
+    return 9.7694411879640484 * (bar - 1);
 }
 
 double MeterToBar(double meter) {
-    return 0.1 * meter + 1;
+    if(meter < 0)
+    {
+        return -MeterToBar(-meter);
+    }
+    return (meter/9.7694411879640484) + 1;
 }
 
 template<typename Out>

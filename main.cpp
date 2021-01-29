@@ -101,6 +101,7 @@ int main(int argc, char *argv[]) {
             for (int i = 0; i < Schedule.size(); i++) {
                 std::cout << "Deco Depth(" << i << "): " << BarToMeter(Schedule[i].Depth) << std::endl;
                 std::cout << "Deco time(" << i << "): " << Schedule[i].Time << std::endl;
+                std::cout << "Deco gas (" << i << "): " << DecoActual->gases[Schedule[i].Gas].FrO2*100 << "/" << DecoActual->gases[Schedule[i].Gas].FrHe*100 << std::endl;
                 std::cout << std::endl;
             }
         } else {
@@ -110,6 +111,8 @@ int main(int argc, char *argv[]) {
     }
 
     ShowUsage(argv[0]);
+
+
 
     return 0;
 }

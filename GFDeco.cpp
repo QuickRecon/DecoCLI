@@ -21,23 +21,20 @@
 double GFDeco::GetCeiling() {
     this->LimitingTissueIndex = 0;
     for (int i = 0; i < 16; i++) {
-        GFDeco DecoSim = GFDeco(*this);
-        double currentCeiling = 0;
-        bool inLimits = false;
-        while (!inLimits) {
-            double Pn = DecoSim.Pn[i];
-            double Ph = DecoSim.Ph[i];
-            double pA = DecoSim.pA;
-            double MaxGF = DecoSim.GetGFPoint(currentCeiling);
-            double TheoreticalGF = ((Pn + Ph) - pA) / (DecoSim.GetMValue(i, currentCeiling) - pA);
+        double Pn = this->Pn[i];
+        double aN2 = GFDeco::buhlmann_N2_a[i];
+        double bN2 = GFDeco::buhlmann_N2_b[i];
 
-            if (TheoreticalGF < MaxGF && !std::isnan(TheoreticalGF)) {
-                inLimits = true;
-            } else {
-                currentCeiling += 0.1;
-            }
-        }
-        this->TissueAccentCeiling[i] = currentCeiling;
+        double Ph = this->Ph[i];
+        double aHe = GFDeco::buhlmann_He_a[i];
+        double bHe = GFDeco::buhlmann_He_b[i];
+
+        double a = ((aN2 * Pn) + (aHe * Ph)) / (Pn + Ph);
+        double b = ((bN2 * Pn) + (bHe * Ph)) / (Pn + Ph);
+
+        double gf = GetGFPoint(Depth);
+        std::cout << gf << std::endl;
+        this->TissueAccentCeiling[i] = ((Pn + Ph) - (a * gf)) / (gf / b + 1.0 - gf);
 
         if (this->TissueAccentCeiling[i] > this->TissueAccentCeiling[LimitingTissueIndex]) {
             LimitingTissueIndex = i;
@@ -48,32 +45,35 @@ double GFDeco::GetCeiling() {
     return ceiling;
 }
 
-double GFDeco::GetMValue(int TissueIndex, double depth) {
-    SetPartialPressures(depth);
-    double ppN2 = this->ppN2;
-    double aN2 = GFDeco::buhlmann_N2_a[TissueIndex];
-    double bN2 = GFDeco::buhlmann_N2_b[TissueIndex];
-
-    double ppHe = this->ppHe;
-    double aHe = GFDeco::buhlmann_He_a[TissueIndex];
-    double bHe = GFDeco::buhlmann_He_b[TissueIndex];
-
-    double a = ((aN2 * ppN2) + (aHe * ppHe)) / (ppN2 + ppHe);
-    double b = ((bN2 * ppN2) + (bHe * ppHe)) / (ppN2 + ppHe);
-
-    return (depth / b) + a;
-}
-
 double GFDeco::GetGFPoint(double depth) {
     double GFHigh = this->GFHigh;
     double GFLow = this->GFLow;
-    double LowDepth = this->MaximumDepth;
+    double LowDepth = this->FirstStopDepth;
 
-    return GFHigh - ((GFHigh - GFLow) / LowDepth) * depth;
+    if (FirstStopDepth == -1) {
+        return GFLow;
+    }
+    else {
+        if(depth < LowDepth) {
+            double GF = GFHigh + ((GFHigh - GFLow) / (0.0 - BarToMeter(LowDepth))) * (BarToMeter(depth));
+            return GF;
+        }
+        else if (depth <= 1)
+        {
+            return GFHigh;
+        }
+        else {
+            return GFLow;
+        }
+    }
+}
+
+GFDeco::GFDeco() {
+    FirstStopDepth = -1;
 }
 
 GFDeco::GFDeco(const GFDeco &GFDeco) {
-
+    FirstStopDepth = GFDeco.FirstStopDepth;
     this->gases = GFDeco.gases;
     this->Depth = GFDeco.Depth;
     this->MaximumDepth = GFDeco.MaximumDepth;
@@ -113,30 +113,35 @@ long GFDeco::GetNoDecoTime() {
     return noStopTime;
 }
 
-Deco::DecoStop GFDeco::GetNextDecoStop() {
-    // Round Deco depth to next multiple of 3m (return as bar)
+GFDeco::DecoStop GFDeco::GetNextDecoStop() {
+    // Round deco depth to next multiple of 3m (return as bar)
     double StopDepth = MeterToBar(ceil(BarToMeter(GFDeco::GetCeiling()) / 3) * 3);
-
-    int StopTime = 0;
+    double StopTime = 0;
     bool inLimits = false;
+    int gas;
     while (!inLimits) {
-        StopTime++;
-        GFDeco DecoSim = GFDeco(*this);
-        DecoSim.AddDecent(StopDepth, -MeterToBar(Deco::AccentRate));
-        DecoSim.AddBottom(StopTime);
-        inLimits = DecoSim.GetCeiling() < StopDepth - 0.3;
+        StopTime += 1;
+        GFDeco decoSim = GFDeco(*this);
+        gas = BestGas(StopDepth, 1.62);
+        decoSim.SwitchGas(gas);
+        decoSim.AddDecent(StopDepth, MeterToBar(GFDeco::AccentRate));
+        decoSim.AddBottom(StopTime);
+        decoSim.GetCeiling();
+        inLimits = decoSim.GetCeiling() < StopDepth-(MeterToBar(3)-1.0);
     }
-    return {StopDepth, StopTime};
+    return {StopDepth, StopTime ,gas};
 }
 
 std::vector<Deco::DecoStop> GFDeco::GetDecoSchedule() {
-    std::vector<Deco::DecoStop> Schedule;
-    GFDeco DecoSim = GFDeco(*this);
-    while (DecoSim.GetCeiling() > 1) {
-        Deco::DecoStop stop = DecoSim.GetNextDecoStop();
+    std::vector<GFDeco::DecoStop> Schedule;
+    this->FirstStopDepth = GetCeiling();
+    GFDeco decoSim = GFDeco(*this);
+    while (decoSim.GetCeiling() > 1.031) {
+        GFDeco::DecoStop stop = decoSim.GetNextDecoStop();
         Schedule.emplace_back(stop);
-        DecoSim.AddDecent(stop.Depth, -MeterToBar(GFDeco::AccentRate));
-        DecoSim.AddBottom(stop.Time);
+        decoSim.SwitchGas(stop.Gas);
+        decoSim.AddDecent(stop.Depth, MeterToBar(GFDeco::AccentRate));
+        decoSim.AddBottom(stop.Time);
     }
     return Schedule;
 }
