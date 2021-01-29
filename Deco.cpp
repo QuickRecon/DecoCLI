@@ -121,7 +121,6 @@ Deco::Deco() {
     SetppWv(0.06257);
     /// Configure default gas (Air)
     AddGas(0.79, 0.21, 0);
-    AddGas(0.0, 1, 0);
 
     SetPartialPressures(1);
     /// Create gas compartments
