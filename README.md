@@ -22,7 +22,7 @@ GF             :   Use the buhlmann decompression model with gradient factor sup
 --help         :   Display this help message.
 
 ### Dive Parameters:
-G              :   Adds a gas to the gas list, takes the form of G\<FrN2>:\<FrO2>:\<FrHe>,
+G              :   Adds a Gas to the Gas list, takes the form of G\<FrN2>:\<FrO2>:\<FrHe>,
                    air (expressed as G0.21:0.79:0) is automatically added as the zeroth element
                    and gases can be accessed in the order they are added.
 
@@ -37,7 +37,7 @@ D              :   Add depths and times to the model, takes the form D\<Depth1>,
 - [ ] Implement VPM Deco Model
 - [x] Implement basic command line interface.
 - [x] Implement custom GF values
-- [ ] Allow for gas switching
+- [ ] Allow for Gas switching
 - [ ] Check models for accuracy against a known good program
 
 ## Sources

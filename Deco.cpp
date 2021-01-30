@@ -37,7 +37,7 @@ const double Deco::buhlmann_He_halflife[] = {1.51, 3.02, 4.72, 6.99, 10.21, 14.4
                                              188.24, 240.03};
 
 
-Deco::gas::gas(double FrN2, double FrO2, double FrHe) {
+Deco::Gas::Gas(double FrN2, double FrO2, double FrHe) {
     this->FrN2 = FrN2;
     this->FrO2 = FrO2;
     this->FrHe = FrHe;
@@ -119,11 +119,11 @@ void Deco::AddBottom(double time) {
 Deco::Deco() {
     this->Depth = 1; //1 bar at atmospheric pressure
     SetppWv(0.06257);
-    /// Configure default gas (Air)
+    /// Configure default Gas (Air)
     AddGas(0.79, 0.21, 0);
 
     SetPartialPressures(1);
-    /// Create gas compartments
+    /// Create Gas compartments
     for (int i = 0; i < 16; i++) {
         this->SetGasLoadings(this->ppN2, 0, i);
     }
@@ -166,7 +166,7 @@ void Deco::SetppWv(double ppwv) {
 }
 
 void Deco::AddGas(double FrN2, double FrO2, double FrHe) {
-    gases.emplace_back(Deco::gas(FrN2, FrO2, FrHe));
+    gases.emplace_back(Deco::Gas(FrN2, FrO2, FrHe));
 }
 
 void Deco::SwitchGas(int gasIndex) {
@@ -265,7 +265,7 @@ Deco::DecoStop Deco::GetNextDecoStop(double startTime) {
     while (!inLimits) {
         StopTime += 1;
         auto* decoSim = new Deco(*this);
-        gas = BestGas(StopDepth, 1.62);
+        gas = BestGas(StopDepth, decoPPO2);
         decoSim->SwitchGas(gas);
         decoSim->AddDecent(StopDepth, MeterToBar(Deco::AccentRate));
         decoSim->AddBottom(StopTime);
@@ -282,7 +282,7 @@ std::vector<Deco::DecoStop> Deco::GetDecoSchedule() {
     auto* decoSim = new Deco(*this);
     while (decoSim->GetCeiling() > 1.031) {
         Deco::DecoStop stop;
-        if (!Schedule.empty() && Schedule.back().Gas == BestGas(Schedule.back().Depth-3, 1.62) )
+        if (!Schedule.empty() && Schedule.back().Gas == BestGas(Schedule.back().Depth-3, decoPPO2) )
         {
             stop = decoSim->GetNextDecoStop(Schedule.back().Time);
         }

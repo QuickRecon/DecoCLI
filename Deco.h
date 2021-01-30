@@ -25,14 +25,14 @@
 class Deco {
 public:
     /// Data Structures
-    struct gas {
+    struct Gas {
         double FrN2;        // Fractional percent Nitrogen
         double FrO2;        // Fractional percent Oxygen
         double FrHe;        // Fractional percent Helium
-        gas(double FrN2, double FrO2, double FrHe);
+        Gas(double FrN2, double FrO2, double FrHe);
     };
 
-    std::vector<gas> gases;
+    std::vector<Gas> gases;
 
     struct DecoStop {
         DecoStop();
@@ -46,7 +46,7 @@ public:
     /// Public Dive parameters
     double DecentRate = 30; // Decent Rate in meters
     double AccentRate = -18;// Accent Rate in meters
-    int CurrentGas = 0;     // Index of current gas
+    int CurrentGas = 0;     // Index of current Gas
 
     /// Functions
     explicit Deco();
@@ -87,15 +87,15 @@ public:
     double GFHigh = 0.7;    // Gradient Factor High
     double GFLow = 0.4;     // Gradient Factor Low
 
-    /// gas parameters
+    /// Gas parameters
     double ppN2;            // partial pressure Nitrogen
     double ppHe;            // partial pressure Helium
     double ppO2;            // partial pressure Oxygen
 
     /// Gas Loadings
-    double Pn[16];          // Nitrogen gas loading
-    double Ph[16];          // Helium gas loading
-    double Pt[16];          // Total gas loading
+    double Pn[16];          // Nitrogen Gas loading
+    double Ph[16];          // Helium Gas loading
+    double Pt[16];          // Total Gas loading
 
     /// Environmental Parameters
     double pA = 1;              // Ambient pressure
@@ -115,6 +115,8 @@ public:
     int BestGas(double depth, double threshold);
 
     DecoStop GetNextDecoStop(double startTime);
+
+    double decoPPO2 = 1.62;
 };
 
 
