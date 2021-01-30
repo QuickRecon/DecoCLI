@@ -233,7 +233,7 @@ double Deco::GetGFPoint(double depth) const{
             double GF = GFHigh + ((GFHigh - GFLow) / (0.0 - BarToMeter(LowDepth))) * (BarToMeter(depth));
             return GF;
         }
-        else if (depth <= 1)
+        else if (depth <= SurfacePressure)
         {
             return GFHigh;
         }
