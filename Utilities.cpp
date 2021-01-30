@@ -18,13 +18,14 @@
 #include "Utilities.h"
 
 double WaterDensity = 9.7694411879640484;
+double SurfacePressure = 1;
 
 double BarToMeter(double bar) {
     if(bar < 0)
     {
         return -BarToMeter(-bar);
     }
-    return WaterDensity * (bar - 1);
+    return WaterDensity * (bar - SurfacePressure);
 }
 
 double MeterToBar(double meter) {

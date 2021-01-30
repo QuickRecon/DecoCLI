@@ -123,7 +123,7 @@ void Deco::AddBottom(double time) {
 }
 
 Deco::Deco() {
-    this->Depth = 1; //1 bar at atmospheric pressure
+    this->Depth = SurfacePressure; //1 bar at atmospheric pressure
     SetppWv(0.06257);
     /// Configure default Gas (Air)
     AddGas(0.79, 0.21, 0);
@@ -249,7 +249,7 @@ double Deco::GetNoDecoTime() const{
     while (inLimits) {
         auto* DecoSim = new Deco(*this);
         DecoSim->AddBottom(noStopTime);
-        inLimits = DecoSim->GetCeiling() < 1;
+        inLimits = DecoSim->GetCeiling() < SurfacePressure;
         noStopTime++;
         delete DecoSim;
         if(noStopTime > 99){return 99;}
@@ -276,7 +276,7 @@ Deco::DecoStop Deco::GetNextDecoStop(double startTime) {
         decoSim->AddDecent(StopDepth, MeterToBar(Deco::AccentRate));
         decoSim->AddBottom(StopTime);
         decoSim->GetCeiling();
-        inLimits = decoSim->GetCeiling() < StopDepth-(MeterToBar(3)-1.0);
+        inLimits = decoSim->GetCeiling() < StopDepth-(MeterToBar(3)-SurfacePressure);
         delete decoSim;
     }
     return {StopDepth, StopTime ,gas};
@@ -286,7 +286,7 @@ std::vector<Deco::DecoStop> Deco::GetDecoSchedule(){
     std::vector<Deco::DecoStop> Schedule;
     this->FirstStopDepth = GetCeiling();
     auto* decoSim = new Deco(*this);
-    while (decoSim->GetCeiling() > 1.031) {
+    while (decoSim->GetCeiling() > SurfacePressure) {
         Deco::DecoStop stop;
         if (!Schedule.empty() && Schedule.back().Gas == BestGas(Schedule.back().Depth-3, decoPPO2) )
         {

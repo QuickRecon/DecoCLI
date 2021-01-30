@@ -26,6 +26,7 @@
 #define DECOCLI_UTILITIES_H
 
 extern double WaterDensity;
+extern double SurfacePressure;
 
 double BarToMeter(double bar);
 
