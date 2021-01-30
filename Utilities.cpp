@@ -22,7 +22,7 @@ double BarToMeter(double bar) {
     {
         return -BarToMeter(-bar);
     }
-    return 9.7694411879640484 * (bar - 1);
+    return WaterDensity * (bar - 1);
 }
 
 double MeterToBar(double meter) {
@@ -30,7 +30,7 @@ double MeterToBar(double meter) {
     {
         return -MeterToBar(-meter);
     }
-    return (meter/9.7694411879640484) + 1;
+    return (meter/WaterDensity) + 1;
 }
 
 template<typename Out>

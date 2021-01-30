@@ -29,6 +29,7 @@ public:
         double FrN2;        // Fractional percent Nitrogen
         double FrO2;        // Fractional percent Oxygen
         double FrHe;        // Fractional percent Helium
+        Gas();
         Gas(double FrN2, double FrO2, double FrHe);
     };
 
