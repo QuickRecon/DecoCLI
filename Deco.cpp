@@ -252,7 +252,7 @@ double Deco::GetNoDecoTime() const{
         inLimits = DecoSim->GetCeiling() < 1;
         noStopTime++;
         delete DecoSim;
-        if(noStopTime > 999){return 999;}
+        if(noStopTime > 99){return 99;}
     }
     noStopTime -= 1;
     return noStopTime;
