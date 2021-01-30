@@ -64,9 +64,9 @@ Deco::DecoStop::DecoStop() {
 
 void Deco::SetPartialPressures(double depth) {
     this->pA = depth;
-    this->ppN2 = gases[CurrentGas].FrN2 * (this->pA - this->ppWv);
-    this->ppHe = gases[CurrentGas].FrHe * (this->pA - this->ppWv);
-    this->ppO2 = gases[CurrentGas].FrO2 * (this->pA - this->ppWv);
+    this->ppN2 = Gases[CurrentGas].FrN2 * (this->pA - this->ppWv);
+    this->ppHe = Gases[CurrentGas].FrHe * (this->pA - this->ppWv);
+    this->ppO2 = Gases[CurrentGas].FrO2 * (this->pA - this->ppWv);
 }
 
 void Deco::AddDecent(double depth, double decentRate) {
@@ -82,7 +82,7 @@ void Deco::AddDecent(double depth, double decentRate) {
         double pn;
         double ppn2 = this->ppN2;
         double CurrentPn = this->Pn[i];
-        double RN2 = BarToMeter(decentRate)/(10.0) * this->gases[CurrentGas].FrN2;
+        double RN2 = BarToMeter(decentRate)/(10.0) * this->Gases[CurrentGas].FrN2;
         double kN2 = log(2.0) / Deco::buhlmann_N2_halflife[i];
         pn = ppn2 + RN2 * (t - (1.0 / kN2)) - (ppn2 - CurrentPn - (RN2 / kN2)) * exp(-kN2 * t);
 
@@ -90,7 +90,7 @@ void Deco::AddDecent(double depth, double decentRate) {
         double ph;
         double pphe = this->ppHe;
         double CurrentPh = this->Ph[i];
-        double RHe = decentRate * this->gases[CurrentGas].FrHe;
+        double RHe = decentRate * this->Gases[CurrentGas].FrHe;
         double kHe = log(2.0) / Deco::buhlmann_He_halflife[i];
         ph = pphe + RHe * (t - (1.0 / kHe)) - (pphe - CurrentPh - (RHe / kHe)) * exp(-kHe * t);
 
@@ -138,7 +138,7 @@ Deco::Deco() {
 
 Deco::Deco(const Deco &Deco) {
     FirstStopDepth = Deco.FirstStopDepth;
-    this->gases = Deco.gases;
+    this->Gases = Deco.Gases;
     this->Depth = Deco.Depth;
     this->MaximumDepth = Deco.MaximumDepth;
 
@@ -172,17 +172,17 @@ void Deco::SetppWv(double ppwv) {
 }
 
 void Deco::AddGas(double FrN2, double FrO2, double FrHe) {
-    gases.emplace_back(Deco::Gas(FrN2, FrO2, FrHe));
+    Gases.emplace_back(Deco::Gas(FrN2, FrO2, FrHe));
 }
 
 void Deco::SwitchGas(int gasIndex) {
     CurrentGas = gasIndex;
 }
 
-int Deco::BestGas(double depth, double threshold) {
+int Deco::BestGas(double depth, double threshold) const{
     int bestGas = 0;
-    for (int i = 0; i < gases.size(); i++) {
-        if(gases[i].FrO2*depth <= threshold && gases[i].FrO2 >= gases[bestGas].FrO2)
+    for (int i = 0; i < Gases.size(); i++) {
+        if(Gases[i].FrO2 * depth <= threshold && Gases[i].FrO2 >= Gases[bestGas].FrO2)
         {
             bestGas = i;
         }
@@ -191,7 +191,7 @@ int Deco::BestGas(double depth, double threshold) {
 }
 
 Deco::~Deco() {
-    gases.clear();
+    Gases.clear();
 }
 
 double Deco::GetCeiling() {
@@ -220,7 +220,7 @@ double Deco::GetCeiling() {
     return ceiling;
 }
 
-double Deco::GetGFPoint(double depth) {
+double Deco::GetGFPoint(double depth) const{
     double GFHigh = this->GFHigh;
     double GFLow = this->GFLow;
     double LowDepth = this->FirstStopDepth;
@@ -243,7 +243,7 @@ double Deco::GetGFPoint(double depth) {
     }
 }
 
-double Deco::GetNoDecoTime() {
+double Deco::GetNoDecoTime() const{
     double noStopTime = 0;
     bool inLimits = true;
     while (inLimits) {
@@ -264,7 +264,7 @@ Deco::DecoStop Deco::GetNextDecoStop() {
 
 Deco::DecoStop Deco::GetNextDecoStop(double startTime) {
     // Round deco depth to next multiple of 3m (return as bar)
-    double StopDepth = MeterToBar(ceil(BarToMeter(Deco::GetCeiling()) / 3) * 3);
+    double StopDepth = MeterToBar(ceil(BarToMeter(this->GetCeiling()) / 3) * 3);
     double StopTime = startTime;
     bool inLimits = false;
     int gas;
@@ -282,7 +282,7 @@ Deco::DecoStop Deco::GetNextDecoStop(double startTime) {
     return {StopDepth, StopTime ,gas};
 }
 
-std::vector<Deco::DecoStop> Deco::GetDecoSchedule() {
+std::vector<Deco::DecoStop> Deco::GetDecoSchedule(){
     std::vector<Deco::DecoStop> Schedule;
     this->FirstStopDepth = GetCeiling();
     auto* decoSim = new Deco(*this);

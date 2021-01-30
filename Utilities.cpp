@@ -101,7 +101,7 @@ void ShowUsage(const std::string executable) {
             "Dive Parameters:\n"
             "G              :   Adds a Gas to the Gas list, takes the form of G<FrN2>:<FrO2>:<FrHe>,\n"
             "                   air (expressed as G0.21:0.79:0) is automatically added as the zeroth element\n"
-            "                   and gases can be accessed in the order they are added.\n"
+            "                   and Gases can be accessed in the order they are added.\n"
             "D              :   Add depths and times to the model, takes the form D<Depth1>,<Time1>:<Depth2>,<Time2>...\n"
             "                   For example a dive that goes to 10 meters for 10 minutes then goes to 60 meters for 5 minutes\n"
             "                   would be expressed as D10,10:60,5";

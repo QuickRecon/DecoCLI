@@ -33,7 +33,7 @@ public:
         Gas(double FrN2, double FrO2, double FrHe);
     };
 
-    std::vector<Gas> gases;
+    std::vector<Gas> Gases;
 
     struct DecoStop {
         DecoStop();
@@ -44,10 +44,13 @@ public:
         DecoStop(double Depth, double Time, int gas);
     };
 
+    typedef std::vector <Deco::DecoStop> Schedule;
+
     /// Public Dive parameters
     double DecentRate = 30; // Decent Rate in meters
     double AccentRate = -18;// Accent Rate in meters
     int CurrentGas = 0;     // Index of current Gas
+    double decoPPO2 = 1.62;
 
     /// Functions
     explicit Deco();
@@ -63,9 +66,9 @@ public:
 
     double GetCeiling();
 
-    virtual double GetNoDecoTime();
+    virtual double GetNoDecoTime() const;
 
-    std::vector<DecoStop> GetDecoSchedule();
+    Schedule GetDecoSchedule();
 
     void AddDecent(double depth, double decentRate);
 
@@ -75,9 +78,13 @@ public:
 
     Deco::DecoStop GetNextDecoStop();
 
-    double GetGFPoint(double depth);
+    double GetGFPoint(double depth) const;
 
-    double FirstStopDepth;
+    void SwitchGas(int gasIndex);
+
+    int BestGas(double depth, double threshold) const;
+
+    DecoStop GetNextDecoStop(double startTime);
 
     /// Dive Parameters
     double Depth = 1;
@@ -85,6 +92,7 @@ public:
     double TissueAccentCeiling[16]; //In Bar
     double AccentCeiling;   // In meters
     int LimitingTissueIndex;
+    double FirstStopDepth;
     double GFHigh = 0.7;    // Gradient Factor High
     double GFLow = 0.4;     // Gradient Factor Low
 
@@ -110,14 +118,6 @@ public:
     static const double buhlmann_He_a[];
     static const double buhlmann_He_b[];
     static const double buhlmann_He_halflife[];
-
-    void SwitchGas(int gasIndex);
-
-    int BestGas(double depth, double threshold);
-
-    DecoStop GetNextDecoStop(double startTime);
-
-    double decoPPO2 = 1.62;
 };
 
 

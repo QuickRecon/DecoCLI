@@ -86,12 +86,12 @@ int main(int argc, char *argv[]) {
     if (!overrideGF) { std::cout << "GRADIENT FACTORS NOT SET, USING 30,80 BY DEFAULT.\n" << std::endl; }
 
     if (argc >= 3) {
-        if (BarToMeter(DecoActual->GetCeiling()) > 0) {
+        if (BarToMeter(DecoActual->GetCeiling()) > 1) {
             std::vector<Deco::DecoStop> Schedule = DecoActual->GetDecoSchedule();
             for (int i = 0; i < Schedule.size(); i++) {
                 std::cout << "Deco Depth(" << i << "): " << BarToMeter(Schedule[i].Depth) << std::endl;
                 std::cout << "Deco time(" << i << "): " << Schedule[i].Time << std::endl;
-                std::cout << "Deco Gas (" << i << "): " << DecoActual->gases[Schedule[i].Gas].FrO2*100 << "/" << DecoActual->gases[Schedule[i].Gas].FrHe*100 << std::endl;
+                std::cout << "Deco Gas (" << i << "): " << DecoActual->Gases[Schedule[i].Gas].FrO2 * 100 << "/" << DecoActual->Gases[Schedule[i].Gas].FrHe * 100 << std::endl;
                 std::cout << std::endl;
             }
         } else {
