@@ -17,6 +17,8 @@
 
 #include "Utilities.h"
 
+double WaterDensity = 9.7694411879640484;
+
 double BarToMeter(double bar) {
     if(bar < 0)
     {

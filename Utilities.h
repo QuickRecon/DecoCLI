@@ -25,7 +25,7 @@
 #ifndef DECOCLI_UTILITIES_H
 #define DECOCLI_UTILITIES_H
 
-double WaterDensity = 9.7694411879640484;
+extern double WaterDensity;
 
 double BarToMeter(double bar);
 
