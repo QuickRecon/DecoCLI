@@ -18,22 +18,28 @@
 #include "Deco.h"
 
 /// Compartment Tables (Taken from Capra)
-const double Deco::buhlmann_N2_a[] = {1.2599, 1.0000, 0.8618, 0.7562, 0.6200, 0.5043, 0.4410, 0.4000, 0.3750, 0.3500, 0.3295, 0.3065,
+const double Deco::buhlmann_N2_a[] = {1.1696, 1.0000, 0.8618, 0.7562, 0.6200, 0.5043, 0.4410, 0.4000, 0.3750, 0.3500,
+                                      0.3295, 0.3065,
                                       0.2835, 0.2610, 0.2480, 0.2327};
 
-const double Deco::buhlmann_N2_b[] = {0.5050, 0.6514, 0.7222, 0.7825, 0.8126, 0.8434, 0.8693, 0.8910, 0.9092, 0.9222, 0.9319, 0.9403,
+const double Deco::buhlmann_N2_b[] = {0.5578, 0.6514, 0.7222, 0.7825, 0.8126, 0.8434, 0.8693, 0.8910, 0.9092, 0.9222,
+                                      0.9319, 0.9403,
                                       0.9477, 0.9544, 0.9602, 0.9653};
 
-const double Deco::buhlmann_N2_halflife[] = {4.0, 8.0, 12.5, 18.5, 27.0, 38.3, 54.3, 77.0, 109.0, 146.0, 187.0, 239.0, 305.0, 390.0, 498.0,
+const double Deco::buhlmann_N2_halflife[] = {5.0, 8.0, 12.5, 18.5, 27.0, 38.3, 54.3, 77.0, 109.0, 146.0, 187.0, 239.0,
+                                             305.0, 390.0, 498.0,
                                              635.0};
 
-const double Deco::buhlmann_He_a[] = {1.7424, 1.3830, 1.1919, 1.0458, 0.9220, 0.8205, 0.7305, 0.6502, 0.5950, 0.5545, 0.5333, 0.5189,
+const double Deco::buhlmann_He_a[] = {1.6189, 1.3830, 1.1919, 1.0458, 0.9220, 0.8205, 0.7305, 0.6502, 0.5950, 0.5545,
+                                      0.5333, 0.5189,
                                       0.5181, 0.5176, 0.5172, 0.5119};
 
-const double Deco::buhlmann_He_b[] = {0.4245, 0.5747, 0.6527, 0.7223, 0.7582, 0.7957, 0.8279, 0.8553, 0.8757, 0.8903, 0.8997, 0.9073,
+const double Deco::buhlmann_He_b[] = {0.4770, 0.5747, 0.6527, 0.7223, 0.7582, 0.7957, 0.8279, 0.8553, 0.8757, 0.8903,
+                                      0.8997, 0.9073,
                                       0.9122, 0.9171, 0.9217, 0.9267};
 
-const double Deco::buhlmann_He_halflife[] = {1.51, 3.02, 4.72, 6.99, 10.21, 14.48, 20.53, 29.11, 41.20, 55.19, 70.69, 90.34, 115.29, 147.42,
+const double Deco::buhlmann_He_halflife[] = {1.88, 3.02, 4.72, 6.99, 10.21, 14.48, 20.53, 29.11, 41.20, 55.19, 70.69,
+                                             90.34, 115.29, 147.42,
                                              188.24, 240.03};
 
 
@@ -82,7 +88,7 @@ void Deco::AddDecent(double depth, double decentRate) {
         double pn;
         double ppn2 = this->ppN2;
         double CurrentPn = this->Pn[i];
-        double RN2 = BarToMeter(decentRate)/(10.0) * this->Gases[CurrentGas].FrN2;
+        double RN2 = BarToMeter(decentRate) / (10.0) * this->Gases[CurrentGas].FrN2;
         double kN2 = log(2.0) / Deco::buhlmann_N2_halflife[i];
         pn = ppn2 + RN2 * (t - (1.0 / kN2)) - (ppn2 - CurrentPn - (RN2 / kN2)) * exp(-kN2 * t);
 
@@ -179,11 +185,10 @@ void Deco::SwitchGas(int gasIndex) {
     CurrentGas = gasIndex;
 }
 
-int Deco::BestGas(double depth, double threshold) const{
+int Deco::BestGas(double depth, double threshold) const {
     int bestGas = 0;
     for (int i = 0; i < Gases.size(); i++) {
-        if(Gases[i].FrO2 * depth <= threshold && Gases[i].FrO2 >= Gases[bestGas].FrO2)
-        {
+        if (Gases[i].FrO2 * depth <= threshold && Gases[i].FrO2 >= Gases[bestGas].FrO2) {
             bestGas = i;
         }
     }
@@ -220,39 +225,35 @@ double Deco::GetCeiling() {
     return ceiling;
 }
 
-double Deco::GetGFPoint(double depth) const{
+double Deco::GetGFPoint(double depth) const {
     double GFHigh = this->GFHigh;
     double GFLow = this->GFLow;
     double LowDepth = this->FirstStopDepth;
 
     if (FirstStopDepth == -1) {
         return GFLow;
-    }
-    else {
-        if(depth < LowDepth) {
+    } else {
+        if (depth < LowDepth) {
             double GF = GFHigh + ((GFHigh - GFLow) / (0.0 - BarToMeter(LowDepth))) * (BarToMeter(depth));
             return GF;
-        }
-        else if (depth <= SurfacePressure)
-        {
+        } else if (depth <= SurfacePressure) {
             return GFHigh;
-        }
-        else {
+        } else {
             return GFLow;
         }
     }
 }
 
-double Deco::GetNoDecoTime() const{
+double Deco::GetNoDecoTime() const {
     double noStopTime = 0;
     bool inLimits = true;
     while (inLimits) {
-        auto* DecoSim = new Deco(*this);
+        auto *DecoSim = new Deco(*this);
         DecoSim->AddBottom(noStopTime);
         inLimits = DecoSim->GetCeiling() < SurfacePressure;
         noStopTime++;
         delete DecoSim;
-        if(noStopTime > 99){return 99;}
+        if (noStopTime > 99) { return 99; }
     }
     noStopTime -= 1;
     return noStopTime;
@@ -270,30 +271,27 @@ Deco::DecoStop Deco::GetNextDecoStop(double startTime) {
     int gas;
     while (!inLimits) {
         StopTime += 1;
-        auto* decoSim = new Deco(*this);
+        auto *decoSim = new Deco(*this);
         gas = BestGas(StopDepth, decoPPO2);
         decoSim->SwitchGas(gas);
         decoSim->AddDecent(StopDepth, MeterToBar(Deco::AccentRate));
         decoSim->AddBottom(StopTime);
         decoSim->GetCeiling();
-        inLimits = decoSim->GetCeiling() < StopDepth-(MeterToBar(3)-SurfacePressure);
+        inLimits = decoSim->GetCeiling() < StopDepth - (MeterToBar(3) - SurfacePressure);
         delete decoSim;
     }
-    return {StopDepth, StopTime ,gas};
+    return {StopDepth, StopTime, gas};
 }
 
-std::vector<Deco::DecoStop> Deco::GetDecoSchedule(){
+std::vector<Deco::DecoStop> Deco::GetDecoSchedule() {
     std::vector<Deco::DecoStop> Schedule;
     this->FirstStopDepth = GetCeiling();
-    auto* decoSim = new Deco(*this);
+    auto *decoSim = new Deco(*this);
     while (decoSim->GetCeiling() > SurfacePressure) {
         Deco::DecoStop stop;
-        if (!Schedule.empty() && Schedule.back().Gas == BestGas(Schedule.back().Depth-3, decoPPO2) )
-        {
+        if (!Schedule.empty() && Schedule.back().Gas == BestGas(Schedule.back().Depth - 3, decoPPO2)) {
             stop = decoSim->GetNextDecoStop(Schedule.back().Time);
-        }
-        else
-        {
+        } else {
             stop = decoSim->GetNextDecoStop();
         }
         Schedule.emplace_back(stop);

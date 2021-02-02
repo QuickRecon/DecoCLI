@@ -30,6 +30,7 @@ public:
         double FrO2;        // Fractional percent Oxygen
         double FrHe;        // Fractional percent Helium
         Gas();
+
         Gas(double FrN2, double FrO2, double FrHe);
     };
 
@@ -41,10 +42,11 @@ public:
         double Depth;
         double Time;
         int Gas;
+
         DecoStop(double Depth, double Time, int gas);
     };
 
-    typedef std::vector <Deco::DecoStop> Schedule;
+    typedef std::vector<Deco::DecoStop> Schedule;
 
     /// Public Dive parameters
     double DecentRate = 30; // Decent Rate in meters
@@ -54,6 +56,7 @@ public:
 
     /// Functions
     explicit Deco();
+
     ~Deco();
 
     Deco(const Deco &deco);
