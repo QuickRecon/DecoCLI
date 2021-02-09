@@ -75,14 +75,14 @@ void Deco::SetPartialPressures(double depth) {
     this->ppO2 = Gases[CurrentGas].FrO2 * (this->pA - this->ppWv);
 }
 
-void Deco::AddDecent(double depth, double decentRate) {
+void Deco::AddDecent(double depth, double time) {
     if (depth > this->MaximumDepth) {
         this->MaximumDepth = depth;
     }
     double DeltaDepth = depth - this->Depth;
     for (int i = 0; i < 16; i++) {
         /// General Values
-        double t = fabs(DeltaDepth) / (fabs(decentRate) - 1);
+        double decentRate = DeltaDepth/time;
 
         /// Calculate Nitrogen
         double pn;
@@ -90,7 +90,7 @@ void Deco::AddDecent(double depth, double decentRate) {
         double CurrentPn = this->Pn[i];
         double RN2 = BarToMeter(decentRate) / (10.0) * this->Gases[CurrentGas].FrN2;
         double kN2 = log(2.0) / Deco::buhlmann_N2_halflife[i];
-        pn = ppn2 + RN2 * (t - (1.0 / kN2)) - (ppn2 - CurrentPn - (RN2 / kN2)) * exp(-kN2 * t);
+        pn = ppn2 + RN2 * (time - (1.0 / kN2)) - (ppn2 - CurrentPn - (RN2 / kN2)) * exp(-kN2 * time);
 
         /// Calculate Helium
         double ph;
@@ -98,7 +98,7 @@ void Deco::AddDecent(double depth, double decentRate) {
         double CurrentPh = this->Ph[i];
         double RHe = decentRate * this->Gases[CurrentGas].FrHe;
         double kHe = log(2.0) / Deco::buhlmann_He_halflife[i];
-        ph = pphe + RHe * (t - (1.0 / kHe)) - (pphe - CurrentPh - (RHe / kHe)) * exp(-kHe * t);
+        ph = pphe + RHe * (time - (1.0 / kHe)) - (pphe - CurrentPh - (RHe / kHe)) * exp(-kHe * time);
 
         /// Set Loading
         SetGasLoadings(pn, ph, i);
@@ -163,14 +163,12 @@ Deco::Deco(const Deco &Deco) {
         this->TissueAccentCeiling[i] = Deco.TissueAccentCeiling[i];
         this->Pn[i] = Deco.Pn[i];
         this->Ph[i] = Deco.Ph[i];
-        this->Pt[i] = Deco.Pt[i];
     }
 }
 
 void Deco::SetGasLoadings(double pn, double ph, int compartmentIndex) {
     this->Pn[compartmentIndex] = pn;
     this->Ph[compartmentIndex] = ph;
-    this->Pt[compartmentIndex] = pn + ph;
 }
 
 void Deco::SetppWv(double ppwv) {

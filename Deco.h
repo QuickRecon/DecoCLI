@@ -107,7 +107,6 @@ public:
     /// Gas Loadings
     double Pn[16];          // Nitrogen Gas loading
     double Ph[16];          // Helium Gas loading
-    double Pt[16];          // Total Gas loading
 
     /// Environmental Parameters
     double pA = 1;              // Ambient pressure
