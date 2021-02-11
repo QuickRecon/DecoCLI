@@ -112,16 +112,16 @@ void Deco::AddBottom(double time) {
         /// Calculate Nitrogen
         double pn;
         double CurrentPn = this->Pn[i];
-        double ppN2 = this->ppN2;
+        double ppn2 = this->ppN2;
         double halftimeN2 = Deco::buhlmann_N2_halflife[i];
-        pn = CurrentPn + (ppN2 - CurrentPn) * (1.0 - pow(2.0, -time / halftimeN2));
+        pn = CurrentPn + (ppn2 - CurrentPn) * (1.0 - pow(2.0, -time / halftimeN2));
 
         /// Calculate Helium
         double ph;
         double CurrentPh = this->Ph[i];
-        double ppHe = this->ppHe;
+        double pphe = this->ppHe;
         double halftimeHe = Deco::buhlmann_He_halflife[i];
-        ph = CurrentPh + (ppHe - CurrentPh) * (1.0 - pow(2.0, -time / halftimeHe));
+        ph = CurrentPh + (pphe - CurrentPh) * (1.0 - pow(2.0, -time / halftimeHe));
 
         /// Set Loading
         SetGasLoadings(pn, ph, i);
@@ -200,19 +200,19 @@ Deco::~Deco() {
 double Deco::GetCeiling() {
     this->LimitingTissueIndex = 0;
     for (int i = 0; i < 16; i++) {
-        double Pn = this->Pn[i];
+        double pn = this->Pn[i];
         double aN2 = Deco::buhlmann_N2_a[i];
         double bN2 = Deco::buhlmann_N2_b[i];
 
-        double Ph = this->Ph[i];
+        double ph = this->Ph[i];
         double aHe = Deco::buhlmann_He_a[i];
         double bHe = Deco::buhlmann_He_b[i];
 
-        double a = ((aN2 * Pn) + (aHe * Ph)) / (Pn + Ph);
-        double b = ((bN2 * Pn) + (bHe * Ph)) / (Pn + Ph);
+        double a = ((aN2 * pn) + (aHe * ph)) / (pn + ph);
+        double b = ((bN2 * pn) + (bHe * ph)) / (pn + ph);
 
         double gf = GetGFPoint(Depth);
-        this->TissueAccentCeiling[i] = ((Pn + Ph) - (a * gf)) / (gf / b + 1.0 - gf);
+        this->TissueAccentCeiling[i] = ((pn + ph) - (a * gf)) / (gf / b + 1.0 - gf);
 
         if (this->TissueAccentCeiling[i] > this->TissueAccentCeiling[LimitingTissueIndex]) {
             LimitingTissueIndex = i;
@@ -224,20 +224,20 @@ double Deco::GetCeiling() {
 }
 
 double Deco::GetGFPoint(double depth) const {
-    double GFHigh = this->GFHigh;
-    double GFLow = this->GFLow;
+    double gfHigh = this->GFHigh;
+    double gfLow = this->GFLow;
     double LowDepth = this->FirstStopDepth;
 
     if (FirstStopDepth == -1) {
-        return GFLow;
+        return gfLow;
     } else {
         if (depth < LowDepth) {
-            double GF = GFHigh + ((GFHigh - GFLow) / (0.0 - BarToMeter(LowDepth))) * (BarToMeter(depth));
+            double GF = gfHigh + ((gfHigh - gfLow) / (0.0 - BarToMeter(LowDepth))) * (BarToMeter(depth));
             return GF;
         } else if (depth <= SurfacePressure) {
-            return GFHigh;
+            return gfHigh;
         } else {
-            return GFLow;
+            return gfLow;
         }
     }
 }

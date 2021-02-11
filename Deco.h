@@ -92,21 +92,21 @@ public:
     /// Dive Parameters
     double Depth = 1;
     double MaximumDepth = 1;
-    double TissueAccentCeiling[16]; //In Bar
-    double AccentCeiling;   // In meters
-    int LimitingTissueIndex;
+    double TissueAccentCeiling[16]{}; //In Bar
+    double AccentCeiling{};   // In meters
+    int LimitingTissueIndex{};
     double FirstStopDepth;
     double GFHigh = 0.7;    // Gradient Factor High
     double GFLow = 0.4;     // Gradient Factor Low
 
     /// Gas parameters
-    double ppN2;            // partial pressure Nitrogen
-    double ppHe;            // partial pressure Helium
-    double ppO2;            // partial pressure Oxygen
+    double ppN2{};            // partial pressure Nitrogen
+    double ppHe{};            // partial pressure Helium
+    double ppO2{};            // partial pressure Oxygen
 
     /// Gas Loadings
-    double Pn[16];          // Nitrogen Gas loading
-    double Ph[16];          // Helium Gas loading
+    double Pn[16]{};          // Nitrogen Gas loading
+    double Ph[16]{};          // Helium Gas loading
 
     /// Environmental Parameters
     double pA = 1;              // Ambient pressure

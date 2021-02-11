@@ -27,7 +27,6 @@ int main(int argc, char *argv[]) {
     Deco *DecoActual = new Deco();
 
     if (argc == 1) {
-        ShowUsage(argv[0]);
         return 0;
     }
     std::string mode(argv[1]);
@@ -35,12 +34,7 @@ int main(int argc, char *argv[]) {
     for (int i = 2; i < argc; i++) {
         std::string argument(argv[i]);
         std::string FirstLetter = argument.substr(0, 1);
-        if (argument == "--ShowLicense") {
-            ShowLicense();
-            return 0;
-        } else if (argument == "--HideLicense") {
-            AutoShowLicense = false;
-        } else if (FirstLetter == "G") {
+        if (FirstLetter == "G") {
             std::string substring = argument.substr(1, argument.size());
             std::vector<std::string> parameters = split(substring, ':');
             double FrO2 = stod(parameters[0]);
@@ -61,8 +55,6 @@ int main(int argc, char *argv[]) {
                 DecoActual->AddDecent(MeterToBar(depth), MeterToBar(DecoActual->DecentRate));
                 DecoActual->AddBottom(time);
             }
-        } else if (argument == "--help") {
-            ShowUsage(argv[0]);
         } else if (argument == "--GFLow") {
             if (mode == "GF") {
                 std::string GFLow = argv[i + 1];
@@ -81,8 +73,6 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    if (AutoShowLicense) { ShowLimitedLicense(); };
-
     if (!overrideGF) { std::cout << "GRADIENT FACTORS NOT SET, USING 30,80 BY DEFAULT.\n" << std::endl; }
 
     if (argc >= 3) {
@@ -99,10 +89,5 @@ int main(int argc, char *argv[]) {
         }
         return 0;
     }
-
-    ShowUsage(argv[0]);
-
-
-
     return 0;
 }
