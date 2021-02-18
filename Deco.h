@@ -73,7 +73,7 @@ public:
 
     Schedule GetDecoSchedule();
 
-    void AddDecent(double depth, double decentRate);
+    void AddDecent(double depth, double time);
 
     void AddBottom(double time);
 
