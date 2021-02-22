@@ -246,14 +246,13 @@ double Deco::GetNoDecoTime() const {
     double noStopTime = 0;
     bool inLimits = true;
     while (inLimits) {
+        noStopTime++;
         auto *DecoSim = new Deco(*this);
         DecoSim->AddBottom(noStopTime);
-        inLimits = DecoSim->GetCeiling() < SurfacePressure;
-        noStopTime++;
+        inLimits = DecoSim->GetCeiling() <= SurfacePressure;
         delete DecoSim;
         if (noStopTime > 99) { return 99; }
     }
-    noStopTime -= 1;
     return noStopTime;
 }
 
