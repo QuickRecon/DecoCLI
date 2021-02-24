@@ -53,6 +53,8 @@ public:
     double AccentRate = -18;// Accent Rate in meters
     int CurrentGas = 0;     // Index of current Gas
     double decoPPO2 = 1.62;
+    double GFHigh = 0.7;    // Gradient Factor High
+    double GFLow = 0.4;     // Gradient Factor Low
 
     /// Functions
     explicit Deco();
@@ -60,10 +62,6 @@ public:
     ~Deco();
 
     Deco(const Deco &deco);
-
-    void SetGasLoadings(double pn, double ph, int compartmentIndex);
-
-    void SetPartialPressures(double depth);
 
     void SetppWv(double ppwv);
 
@@ -81,13 +79,20 @@ public:
 
     Deco::DecoStop GetNextDecoStop();
 
-    double GetGFPoint(double depth) const;
-
     void SwitchGas(int gasIndex);
 
     int BestGas(double depth, double threshold) const;
 
     DecoStop GetNextDecoStop(double startTime);
+
+private:
+    static const double buhlmann_N2_a[];
+    static const double buhlmann_N2_b[];
+    static const double buhlmann_N2_halflife[];
+
+    static const double buhlmann_He_a[];
+    static const double buhlmann_He_b[];
+    static const double buhlmann_He_halflife[];
 
     /// Dive Parameters
     double Depth = 1;
@@ -96,8 +101,6 @@ public:
     double AccentCeiling{};   // In meters
     int LimitingTissueIndex{};
     double FirstStopDepth;
-    double GFHigh = 0.7;    // Gradient Factor High
-    double GFLow = 0.4;     // Gradient Factor Low
 
     /// Gas parameters
     double ppN2{};            // partial pressure Nitrogen
@@ -112,14 +115,11 @@ public:
     double pA = 1;              // Ambient pressure
     double ppWv = 0;            // Partial pressure water vapor
 
-    /// Compartment Tables (Taken from Subsurface Deco.c)
-    static const double buhlmann_N2_a[];
-    static const double buhlmann_N2_b[];
-    static const double buhlmann_N2_halflife[];
+    double GetGFPoint(double depth) const;
 
-    static const double buhlmann_He_a[];
-    static const double buhlmann_He_b[];
-    static const double buhlmann_He_halflife[];
+    void SetPartialPressures(double depth);
+
+    void SetGasLoadings(double pn, double ph, int compartmentIndex);
 };
 
 
