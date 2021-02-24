@@ -32,4 +32,5 @@ double BarToMeter(double bar);
 
 double MeterToBar(double meter);
 
+void NoOp();
 #endif //DECOCLI_UTILITIES_H

@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
 
     if (argc >= 3) {
         if (BarToMeter(DecoActual->GetCeiling()) > 1) {
-            std::vector<Deco::DecoStop> Schedule = DecoActual->GetDecoSchedule();
+            std::vector<Deco::DecoStop> Schedule = DecoActual->GetDecoSchedule(&NoOp);
             for (int i = 0; i < Schedule.size(); i++) {
                 std::cout << "Deco Depth(" << i << "): " << BarToMeter(Schedule[i].Depth) << std::endl;
                 std::cout << "Deco time(" << i << "): " << Schedule[i].Time << std::endl;

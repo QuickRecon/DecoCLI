@@ -69,7 +69,7 @@ public:
 
     virtual double GetNoDecoTime() const;
 
-    Schedule GetDecoSchedule();
+    Schedule GetDecoSchedule(void (*WatchdogCallback)());
 
     void AddDecent(double depth, double time);
 

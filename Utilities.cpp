@@ -33,3 +33,7 @@ double MeterToBar(double meter) {
     }
     return (meter / WaterDensity) + SurfacePressure;
 }
+
+void NoOp() {
+
+}

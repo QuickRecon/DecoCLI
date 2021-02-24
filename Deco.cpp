@@ -280,7 +280,7 @@ Deco::DecoStop Deco::GetNextDecoStop(double startTime) {
     return {StopDepth, StopTime, gas};
 }
 
-std::vector<Deco::DecoStop> Deco::GetDecoSchedule() {
+std::vector<Deco::DecoStop> Deco::GetDecoSchedule(void (*WatchdogCallback)()) {
     std::vector<Deco::DecoStop> Schedule;
     this->FirstStopDepth = GetCeiling();
     auto *decoSim = new Deco(*this);
@@ -295,6 +295,7 @@ std::vector<Deco::DecoStop> Deco::GetDecoSchedule() {
         decoSim->SwitchGas(stop.Gas);
         decoSim->AddDecent(stop.Depth, MeterToBar(Deco::AccentRate));
         decoSim->AddBottom(stop.Time);
+        WatchdogCallback();
     }
     delete decoSim;
     return Schedule;
