@@ -93,6 +93,8 @@ public:
 
     void GetN2Loading(double loading[16]);
 
+    double GetFirstStopDepth();
+
 private:
     static const double buhlmann_N2_a[];
     static const double buhlmann_N2_b[];

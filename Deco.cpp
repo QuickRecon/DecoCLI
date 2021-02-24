@@ -323,3 +323,7 @@ void Deco::GetN2Loading(double *loading) {
         loading[i] = this->Pn[i];
     }
 }
+
+double Deco::GetFirstStopDepth() {
+    return FirstStopDepth;
+}
