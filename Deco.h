@@ -85,6 +85,14 @@ public:
 
     DecoStop GetNextDecoStop(double startTime);
 
+    void SetHeLoading(double const loading[16]);
+
+    void SetN2Loading(double const loading[16]);
+
+    void GetHeLoading(double loading[16]);
+
+    void GetN2Loading(double loading[16]);
+
 private:
     static const double buhlmann_N2_a[];
     static const double buhlmann_N2_b[];

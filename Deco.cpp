@@ -299,3 +299,27 @@ std::vector<Deco::DecoStop> Deco::GetDecoSchedule() {
     delete decoSim;
     return Schedule;
 }
+
+void Deco::SetHeLoading(const double loading[16]) {
+    for (int i = 0; i < 16; i++) {
+        this->Ph[i] = loading[i];
+    }
+}
+
+void Deco::SetN2Loading(const double loading[16]) {
+    for (int i = 0; i < 16; i++) {
+        this->Pn[i] = loading[i];
+    }
+}
+
+void Deco::GetHeLoading(double *loading) {
+    for (int i = 0; i < 16; i++) {
+        loading[i] = this->Ph[i];
+    }
+}
+
+void Deco::GetN2Loading(double *loading) {
+    for (int i = 0; i < 16; i++) {
+        loading[i] = this->Pn[i];
+    }
+}
