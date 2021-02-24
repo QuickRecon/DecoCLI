@@ -18,9 +18,10 @@
 //
 #include <iostream>
 #include "Deco.h"
-bool AutoShowLicense = true;
-bool verbose = true;
+
 bool overrideGF = false;
+
+std::vector<std::string> split(const std::string &s, char delimiter);
 
 int main(int argc, char *argv[]) {
 
@@ -42,8 +43,6 @@ int main(int argc, char *argv[]) {
             double FrHe = stod(parameters[2]);
             DecoActual->AddGas(FrO2, FrN2, FrHe);
         } else if (argument == "--quite") {
-            verbose = false;
-            AutoShowLicense = false;
             return 0;
         } else if (FirstLetter == "D") {
             std::string substring = argument.substr(1, argument.size());
@@ -81,7 +80,8 @@ int main(int argc, char *argv[]) {
             for (int i = 0; i < Schedule.size(); i++) {
                 std::cout << "Deco Depth(" << i << "): " << BarToMeter(Schedule[i].Depth) << std::endl;
                 std::cout << "Deco time(" << i << "): " << Schedule[i].Time << std::endl;
-                std::cout << "Deco Gas (" << i << "): " << DecoActual->Gases[Schedule[i].Gas].FrO2 * 100 << "/" << DecoActual->Gases[Schedule[i].Gas].FrHe * 100 << std::endl;
+                std::cout << "Deco Gas (" << i << "): " << DecoActual->Gases[Schedule[i].Gas].FrO2 * 100 << "/"
+                          << DecoActual->Gases[Schedule[i].Gas].FrHe * 100 << std::endl;
                 std::cout << std::endl;
             }
         } else {
@@ -90,4 +90,22 @@ int main(int argc, char *argv[]) {
         return 0;
     }
     return 0;
+}
+
+
+template<typename Out>
+
+void split(const std::string &s, char delimiter, Out result) {
+    std::stringstream ss;
+    ss.str(s);
+    std::string item;
+    while (std::getline(ss, item, delimiter)) {
+        *(result++) = item;
+    }
+}
+
+std::vector<std::string> split(const std::string &s, char delimiter) {
+    std::vector<std::string> elements;
+    split(s, delimiter, std::back_inserter(elements));
+    return elements;
 }
