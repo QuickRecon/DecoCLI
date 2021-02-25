@@ -76,6 +76,7 @@ void Deco::SetPartialPressures(double depth) {
 }
 
 void Deco::AddDecent(double depth, double time) {
+    time = fabs(time);
     if (depth > this->MaximumDepth) {
         this->MaximumDepth = depth;
     }
@@ -88,7 +89,7 @@ void Deco::AddDecent(double depth, double time) {
         double pn;
         double ppn2 = this->ppN2;
         double CurrentPn = this->Pn[i];
-        double RN2 = BarToMeter(decentRate) / (10.0) * this->Gases[CurrentGas].FrN2;
+        double RN2 = decentRate * this->Gases[CurrentGas].FrN2;
         double kN2 = log(2.0) / Deco::buhlmann_N2_halflife[i];
         pn = ppn2 + RN2 * (time - (1.0 / kN2)) - (ppn2 - CurrentPn - (RN2 / kN2)) * exp(-kN2 * time);
 
@@ -108,6 +109,7 @@ void Deco::AddDecent(double depth, double time) {
 }
 
 void Deco::AddBottom(double time) {
+    time = fabs(time);
     for (int i = 0; i < 16; i++) {
         /// Calculate Nitrogen
         double pn;
@@ -183,10 +185,10 @@ void Deco::SwitchGas(int gasIndex) {
     CurrentGas = gasIndex;
 }
 
-int Deco::BestGas(double depth, double threshold) const {
+int Deco::BestGas(double depth, double PPO2Limit) const {
     int bestGas = 0;
     for (int i = 0; i < Gases.size(); i++) {
-        if (Gases[i].FrO2 * depth <= threshold && Gases[i].FrO2 >= Gases[bestGas].FrO2) {
+        if (Gases[i].FrO2 * depth <= PPO2Limit && Gases[i].FrO2 >= Gases[bestGas].FrO2) {
             bestGas = i;
         }
     }
@@ -249,6 +251,7 @@ double Deco::GetNoDecoTime() const {
         noStopTime++;
         auto *DecoSim = new Deco(*this);
         DecoSim->AddBottom(noStopTime);
+        DecoSim->AddDecent(1, DecoSim->Depth / (AccentRate / 10.0));
         inLimits = DecoSim->GetCeiling() <= SurfacePressure;
         delete DecoSim;
         if (noStopTime > 99) { return 99; }

@@ -50,11 +50,11 @@ public:
 
     /// Public Dive parameters
     double DecentRate = 30; // Decent Rate in meters
-    double AccentRate = -18;// Accent Rate in meters
+    double AccentRate = 18;// Accent Rate in meters
     int CurrentGas = 0;     // Index of current Gas
     double decoPPO2 = 1.62;
     double GFHigh = 0.7;    // Gradient Factor High
-    double GFLow = 0.4;     // Gradient Factor Low
+    double GFLow = 0.5;     // Gradient Factor Low
 
     /// Functions
     explicit Deco();
@@ -81,7 +81,7 @@ public:
 
     void SwitchGas(int gasIndex);
 
-    int BestGas(double depth, double threshold) const;
+    int BestGas(double depth, double PPO2Limit) const;
 
     DecoStop GetNextDecoStop(double startTime);
 

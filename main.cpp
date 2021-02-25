@@ -51,8 +51,9 @@ int main(int argc, char *argv[]) {
                 std::vector<std::string> depths = split(parameter, ',');
                 double depth = stod(depths[0]);
                 double time = stod(depths[1]);
-                DecoActual->AddDecent(MeterToBar(depth), MeterToBar(DecoActual->DecentRate));
-                DecoActual->AddBottom(time);
+                DecoActual->AddDecent(MeterToBar(depth), 1);
+                DecoActual->AddDecent(MeterToBar(depth), time);
+                //DecoActual->AddBottom(time);
             }
         } else if (argument == "--GFLow") {
             if (mode == "GF") {
