@@ -244,7 +244,7 @@ double Deco::GetGFPoint(double depth) const {
     }
 }
 
-double Deco::GetNoDecoTime() const {
+double Deco::GetNoDecoTime(void (*WatchdogCallback)()) const {
     double noStopTime = 0;
     bool inLimits = true;
     while (inLimits) {
@@ -254,6 +254,7 @@ double Deco::GetNoDecoTime() const {
         DecoSim->AddDecent(1, DecoSim->Depth / (AccentRate / 10.0));
         inLimits = DecoSim->GetCeiling() <= SurfacePressure;
         delete DecoSim;
+        WatchdogCallback();
         if (noStopTime > 99) { return 99; }
     }
     return noStopTime;

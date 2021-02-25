@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
                 std::cout << std::endl;
             }
         } else {
-            std::cout << "Remaining No Stop Time: " << DecoActual->GetNoDecoTime();
+            std::cout << "Remaining No Stop Time: " << DecoActual->GetNoDecoTime(NoOp);
         }
         return 0;
     }

@@ -67,7 +67,7 @@ public:
 
     double GetCeiling();
 
-    virtual double GetNoDecoTime() const;
+    virtual double GetNoDecoTime(void (*WatchdogCallback)()) const;
 
     Schedule GetDecoSchedule(void (*WatchdogCallback)());
 
