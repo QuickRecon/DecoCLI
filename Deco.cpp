@@ -77,35 +77,37 @@ void Deco::SetPartialPressures(double depth) {
 
 void Deco::AddDecent(double depth, double time) {
     time = fabs(time);
-    if (depth > this->MaximumDepth) {
-        this->MaximumDepth = depth;
+    if (time > 0) { // Abort if 0 time or 0 depth
+        if (depth > this->MaximumDepth) {
+            this->MaximumDepth = depth;
+        }
+        double DeltaDepth = depth - this->Depth;
+        for (int i = 0; i < 16; i++) {
+            /// General Values
+            double decentRate = DeltaDepth / time;
+
+            /// Calculate Nitrogen
+            double pn;
+            double ppn2 = this->ppN2;
+            double CurrentPn = this->Pn[i];
+            double RN2 = decentRate * this->Gases[CurrentGas].FrN2;
+            double kN2 = log(2.0) / Deco::buhlmann_N2_halflife[i];
+            pn = ppn2 + RN2 * (time - (1.0 / kN2)) - (ppn2 - CurrentPn - (RN2 / kN2)) * exp(-kN2 * time);
+
+            /// Calculate Helium
+            double ph;
+            double pphe = this->ppHe;
+            double CurrentPh = this->Ph[i];
+            double RHe = decentRate * this->Gases[CurrentGas].FrHe;
+            double kHe = log(2.0) / Deco::buhlmann_He_halflife[i];
+            ph = pphe + RHe * (time - (1.0 / kHe)) - (pphe - CurrentPh - (RHe / kHe)) * exp(-kHe * time);
+
+            /// Set Loading
+            SetGasLoadings(pn, ph, i);
+        }
+        SetPartialPressures(depth);
+        this->Depth = depth;
     }
-    double DeltaDepth = depth - this->Depth;
-    for (int i = 0; i < 16; i++) {
-        /// General Values
-        double decentRate = DeltaDepth/time;
-
-        /// Calculate Nitrogen
-        double pn;
-        double ppn2 = this->ppN2;
-        double CurrentPn = this->Pn[i];
-        double RN2 = decentRate * this->Gases[CurrentGas].FrN2;
-        double kN2 = log(2.0) / Deco::buhlmann_N2_halflife[i];
-        pn = ppn2 + RN2 * (time - (1.0 / kN2)) - (ppn2 - CurrentPn - (RN2 / kN2)) * exp(-kN2 * time);
-
-        /// Calculate Helium
-        double ph;
-        double pphe = this->ppHe;
-        double CurrentPh = this->Ph[i];
-        double RHe = decentRate * this->Gases[CurrentGas].FrHe;
-        double kHe = log(2.0) / Deco::buhlmann_He_halflife[i];
-        ph = pphe + RHe * (time - (1.0 / kHe)) - (pphe - CurrentPh - (RHe / kHe)) * exp(-kHe * time);
-
-        /// Set Loading
-        SetGasLoadings(pn, ph, i);
-    }
-    SetPartialPressures(depth);
-    this->Depth = depth;
 }
 
 void Deco::AddBottom(double time) {
